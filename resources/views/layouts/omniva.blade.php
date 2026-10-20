@@ -46,7 +46,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo/apple-touch-icon.png">
     @stack('styles')
     @php
-        $co = config('feed.company');
+        $co = company_nap();
+        $returnDays = (int) config('merchant.returns.days', 14);
+        $shipPrice = number_format((float) config('merchant.shipping.price', 0), 2, '.', '');
     @endphp
     <script type="application/ld+json">
         {!! json_encode([
@@ -54,39 +56,106 @@
             '@graph' => [
                 [
                     '@type' => 'Organization',
+                    '@id' => url('/').'#organization',
                     'name' => $co['legal_name'],
                     'legalName' => $co['legal_name'],
-                    'url' => url('/'),
+                    'alternateName' => $co['brand_name'] ?? 'Heri Brennholz',
+                    'url' => $co['website'] ?? url('/'),
+                    'logo' => asset('assets/images/logo/logo.png'),
                     'email' => $co['email'],
-                    'telephone' => $co['phone'],
+                    'telephone' => $co['telephone_display'] ?? $co['phone'] ?? '+41 78 609 95 16',
+                    'vatID' => $co['vat_id'] ?? 'CHE-228.719.493',
+                    'taxID' => $co['vat_id'] ?? 'CHE-228.719.493',
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => $co['street'],
                         'postalCode' => $co['postal_code'],
-                        'addressLocality' => $co['city'],
-                        'addressCountry' => $co['country'],
+                        'addressLocality' => $co['locality'] ?? $co['city'],
+                        'addressRegion' => $co['region'] ?? 'Solothurn',
+                        'addressCountry' => $co['country'] ?? 'CH',
                     ],
                     'contactPoint' => [
                         '@type' => 'ContactPoint',
                         'contactType' => 'customer service',
-                        'telephone' => $co['phone'],
+                        'telephone' => $co['telephone_display'] ?? $co['phone'],
                         'email' => $co['email'],
                         'areaServed' => 'CH',
-                        'availableLanguage' => ['de'],
+                        'availableLanguage' => ['de', 'fr'],
+                        'hoursAvailable' => [
+                            '@type' => 'OpeningHoursSpecification',
+                            'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                            'opens' => '08:00',
+                            'closes' => '18:00',
+                        ],
                     ],
                 ],
                 [
                     '@type' => 'OnlineStore',
+                    '@id' => url('/').'#store',
                     'name' => $co['legal_name'],
-                    'url' => url('/'),
-                    'telephone' => $co['phone'],
+                    'url' => $co['website'] ?? url('/'),
+                    'telephone' => $co['telephone_display'] ?? $co['phone'],
                     'email' => $co['email'],
+                    'currenciesAccepted' => 'CHF',
+                    'paymentAccepted' => payment_methods_text(),
+                    'areaServed' => ['CH'],
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => $co['street'],
                         'postalCode' => $co['postal_code'],
-                        'addressLocality' => $co['city'],
-                        'addressCountry' => $co['country'],
+                        'addressLocality' => $co['locality'] ?? $co['city'],
+                        'addressRegion' => $co['region'] ?? 'Solothurn',
+                        'addressCountry' => $co['country'] ?? 'CH',
+                    ],
+                    'parentOrganization' => ['@id' => url('/').'#organization'],
+                    'hasMerchantReturnPolicy' => [
+                        '@type' => 'MerchantReturnPolicy',
+                        'applicableCountry' => 'CH',
+                        'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                        'merchantReturnDays' => $returnDays,
+                        'returnMethod' => 'https://schema.org/ReturnByMail',
+                        'returnFees' => (bool) config('merchant.returns.customer_pays_return_shipping', true)
+                            ? 'https://schema.org/ReturnFeesCustomerResponsibility'
+                            : 'https://schema.org/FreeReturn',
+                        'merchantReturnLink' => url('/rueckgabe'),
+                    ],
+                    'shippingDetails' => [
+                        '@type' => 'OfferShippingDetails',
+                        'shippingDestination' => [
+                            '@type' => 'DefinedRegion',
+                            'addressCountry' => 'CH',
+                        ],
+                        'shippingRate' => [
+                            '@type' => 'MonetaryAmount',
+                            'value' => $shipPrice,
+                            'currency' => 'CHF',
+                        ],
+                        'deliveryTime' => [
+                            '@type' => 'ShippingDeliveryTime',
+                            'handlingTime' => [
+                                '@type' => 'QuantitativeValue',
+                                'minValue' => (int) config('merchant.shipping.handling_min', 1),
+                                'maxValue' => (int) config('merchant.shipping.handling_max', 1),
+                                'unitCode' => 'DAY',
+                            ],
+                            'transitTime' => [
+                                '@type' => 'QuantitativeValue',
+                                'minValue' => (int) config('merchant.shipping.transit_min', 0),
+                                'maxValue' => (int) config('merchant.shipping.transit_max', 1),
+                                'unitCode' => 'DAY',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    '@type' => 'WebSite',
+                    'name' => $co['brand_name'] ?? 'Heri Brennholz',
+                    'url' => url('/'),
+                    'publisher' => ['@id' => url('/').'#organization'],
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => url('/suche').'?q={search_term_string}',
+                        'query-input' => 'required name=search_term_string',
                     ],
                 ],
             ],
@@ -181,9 +250,9 @@
                                     <!-- slide 1 -->
                                     <div class="swiper-slide">
                                         <div class="text-adver text-white text-caption">
-                                            Kostenlose Lieferung in der Schweiz in 1–2 Werktagen
+                                            {{ shipping_summary() }}
                                             <span class="br-line bg-white"></span>
-                                            <a href="/shop" class="fw-semibold link-underline">
+                                            <a href="{{ route('shop.index') }}" class="fw-semibold link-underline">
                                                 Zum Shop
                                             </a>
                                         </div>
@@ -191,14 +260,23 @@
                                     <!-- slide 2 -->
                                     <div class="swiper-slide">
                                         <div class="text-adver text-white text-caption">
-                                            Trockenes Holz &amp; zertifizierte Pellets, palettenweise geliefert.
+                                            Heri Brennholz GmbH · Biberist · UID CHE-228.719.493
                                             <span class="br-line bg-white"></span>
-                                            <a href="/shop" class="fw-semibold link-underline">
-                                                Zum Shop
+                                            <a href="{{ route('pages.impressum') }}" class="fw-semibold link-underline">
+                                                Impressum
                                             </a>
                                         </div>
                                     </div>
                                     <!-- slide 3 -->
+                                    <div class="swiper-slide">
+                                        <div class="text-adver text-white text-caption">
+                                            Preise inkl. MWST · Zahlung: {{ payment_methods_text() }}
+                                            <span class="br-line bg-white"></span>
+                                            <a href="{{ route('pages.contact') }}" class="fw-semibold link-underline">
+                                                Kontakt
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- <div class="sw-dot-default tf-sw-pagination"></div> -->
                             </div>
@@ -209,9 +287,9 @@
                     </div>
                     <div class="col-lg-6 d-none d-lg-block">
                         <div class="tf-list justify-content-end">
-                            <a href="/ueber-uns" class="text-caption text-white link-underline">Über uns</a>
-                            <a href="/shop" class="text-caption text-white link-underline">Unsere Produkte</a>
-                            <a href="/kontakt" class="text-caption text-white link-underline">Kontakt</a>
+                            <a href="{{ route('pages.about') }}" class="text-caption text-white link-underline">Über uns</a>
+                            <a href="{{ route('shop.index') }}" class="text-caption text-white link-underline">Unsere Produkte</a>
+                            <a href="{{ route('pages.contact') }}" class="text-caption text-white link-underline">Kontakt</a>
                         </div>
                     </div>
                 </div>
@@ -335,31 +413,40 @@
                                     <span class="ic-w">
                                         <i class="icon icon-DotLocation"></i>
                                     </span>
-                                    <a href="https://www.google.com/maps?q=Fiderholzstrasse+7,+4562+Biberist,+Schweiz"
-                                        class="text-caption fw-medium link-underline link-black">
-                                        Fiderholzstrasse 7, 4562 Biberist, Schweiz
+                                    <a href="https://www.google.com/maps?q={{ urlencode(($co['street'] ?? 'Fiderholzstrasse 7').', '.($co['postal_code'] ?? '4562').' '.($co['locality'] ?? $co['city'] ?? 'Biberist').', Schweiz') }}"
+                                        class="text-caption fw-medium link-underline link-black"
+                                        target="_blank" rel="noopener">
+                                        {{ $co['street'] ?? 'Fiderholzstrasse 7' }}, {{ $co['postal_code'] ?? '4562' }} {{ $co['locality'] ?? $co['city'] ?? 'Biberist' }}, {{ $co['country_name'] ?? 'Schweiz' }}
                                     </a>
                                 </li>
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-Phone"></i>
                                     </span>
-                                    <a href="tel:+41786099516"
+                                    <a href="tel:{{ $co['telephone'] ?? '+41786099516' }}"
                                         class="text-caption fw-medium link-underline link-black">
-                                        +41 78 609 95 16
+                                        {{ $co['telephone_display'] ?? $co['phone'] ?? '+41 78 609 95 16' }}
                                     </a>
                                 </li>
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-LetterEnvelope"></i>
                                     </span>
-                                    <a href="mailto:kontakt@heribrennholzgmbh.com"
+                                    <a href="mailto:{{ $co['email'] ?? 'kontakt@heribrennholzgmbh.com' }}"
                                         class="text-caption fw-medium link-underline link-black">
-                                        kontakt@heribrennholzgmbh.com
+                                        {{ $co['email'] ?? 'kontakt@heribrennholzgmbh.com' }}
                                     </a>
                                 </li>
+                                <li class="infor-contact_item">
+                                    <span class="ic-w">
+                                        <i class="icon icon-Clock"></i>
+                                    </span>
+                                    <span class="text-caption fw-medium">
+                                        {{ $co['hours_label'] ?? 'Mo–Fr 08:00–18:00' }}
+                                    </span>
+                                </li>
                             </ul>
-                            <a href="/kontakt" class="tf-btn-line gap-6">
+                            <a href="{{ route('pages.contact') }}" class="tf-btn-line gap-6">
                                 <span class="text-caption fw-medium">
                                     Kontakt aufnehmen
                                 </span>
@@ -371,22 +458,22 @@
                             <div class="tf-collapse-content">
                                 <ul class="footer-menu-list">
                                     <li>
-                                        <a href="/ueber-uns" class="text-caption fw-medium link-black link-underline">
+                                        <a href="{{ route('pages.about') }}" class="text-caption fw-medium link-black link-underline">
                                             Über uns
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/kontakt" class="text-caption fw-medium link-black link-underline">
+                                        <a href="{{ route('pages.contact') }}" class="text-caption fw-medium link-black link-underline">
                                             Kontakt
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/ueber-uns" class="text-caption fw-medium link-black link-underline">
+                                        <a href="{{ route('pages.about') }}" class="text-caption fw-medium link-black link-underline">
                                             Unsere Geschichte
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/shop"
+                                        <a href="{{ route('shop.index') }}"
                                             class="text-caption fw-medium link-black link-underline">
                                             Zum Shop
                                         </a>
@@ -404,12 +491,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/datenschutz" class="text-caption fw-medium link-black link-underline">
+                                        <a href="{{ route('pages.privacy') }}" class="text-caption fw-medium link-black link-underline">
                                             Datenschutz
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/agb"
+                                        <a href="{{ route('pages.terms') }}"
                                             class="text-caption fw-medium link-black link-underline">
                                             AGB
                                         </a>
@@ -420,7 +507,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/faq" class="text-caption fw-medium link-black link-underline">
+                                        <a href="{{ route('pages.faq') }}" class="text-caption fw-medium link-black link-underline">
                                             FAQ
                                         </a>
                                     </li>

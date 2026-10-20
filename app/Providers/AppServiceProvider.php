@@ -35,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('navCategories', Category::orderBy('position')->withCount('products')->get());
             $view->with('cart', app(Cart::class));
             $view->with('wishlist', app(Wishlist::class));
+            $view->with('company', company_nap());
         });
     }
 }

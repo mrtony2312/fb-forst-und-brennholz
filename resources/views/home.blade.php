@@ -1,6 +1,7 @@
 @extends('layouts.omniva')
 
 @section('title', 'Brennholz, Holzpellets & Kaminholz')
+@section('meta_description', 'Heri Brennholz GmbH in Biberist: Brennholz, Pellets und Briketts – Preise inkl. MWST, kostenlose Lieferung in der ganzen Schweiz, transparentes Impressum und Kundenservice.')
 
 @push('styles')
 <style>

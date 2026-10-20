@@ -1,28 +1,77 @@
 @extends('layouts.omniva')
 
-@section('title', 'Rückgabe')
+@section('title', 'Rückgabe & Erstattung')
+@section('meta_description', 'Freiwilliges 14-Tage-Rückgaberecht der Heri Brennholz GmbH. Transparente Rückgabe- und Erstattungsbedingungen.')
 
 @section('content')
-    @include('partials.page-title', ['pageTitle' => 'Rückgabe', 'titleImageSlug' => 'banner-wide-1'])
+    @php
+        $nap = company_nap();
+        $ret = config('merchant.returns');
+        $days = (int) ($ret['days'] ?? 14);
+        $refundDays = (int) ($ret['refund_days'] ?? 14);
+        $returnCost = (float) ($ret['return_shipping_cost'] ?? 15);
+        $customerPays = (bool) ($ret['customer_pays_return_shipping'] ?? true);
+    @endphp
+    @include('partials.page-title', ['pageTitle' => 'Rückgabe & Erstattung', 'titleImageSlug' => 'banner-wide-1'])
     <section class="flat-spacing-9">
         <div class="container" style="max-width:820px;">
-            <p>Nach Schweizer Recht besteht für online abgeschlossene Kaufverträge kein gesetzliches Widerrufsrecht. Wir räumen unseren Kundinnen und Kunden dennoch freiwillig folgendes Rückgaberecht ein.</p>
+            <p class="text-caption mb-4">Nach Schweizer Recht besteht für online abgeschlossene Kaufverträge <strong>kein gesetzliches Widerrufsrecht</strong>. Wir räumen unseren Kundinnen und Kunden dennoch freiwillig folgendes Rückgaberecht ein.</p>
 
-            <h5>Frist</h5>
-            <p>Sie können innerhalb von 14 Tagen ab Erhalt der Ware eine Rückgabe beantragen. Zur Ausübung genügt eine formlose Mitteilung, z. B. per E-Mail an <a href="mailto:kontakt@heribrennholzgmbh.com">kontakt@heribrennholzgmbh.com</a>.</p>
+            <h5>Freiwilliges Rückgaberecht</h5>
+            <p>
+                Sie können Ware innerhalb von <strong>{{ $days }} Tagen</strong> nach Erhalt ohne Angabe von Gründen zurückgeben,
+                sofern sie unbenutzt, unbeschädigt und in wiederverkaufsfähigem Zustand ist (Originalverpackung soweit zumutbar).
+            </p>
 
-            <h5>Zustand der Ware</h5>
-            <p>Die Ware muss unbenutzt und in wiederverkaufsfähigem Zustand sein.</p>
+            <h5>Ausnahmen</h5>
+            <ul>
+                <li>Angebrochene oder verbrauchte Brennstoffe (z.&nbsp;B. geöffnete Pelletsäcke, verfeuertes Holz)</li>
+                <li>Ware, die nach Kundenspezifikation angefertigt oder klar personalisiert wurde</li>
+                <li>Beschädigte oder stark verschmutzte Artikel durch unsachgemässe Handhabung</li>
+            </ul>
+
+            <h5>Rückgabeprozess</h5>
+            <ol>
+                <li>Kontaktieren Sie uns vor der Rücksendung per E-Mail an
+                    <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a>
+                    oder telefonisch unter
+                    <a href="tel:{{ $nap['telephone'] }}">{{ $nap['telephone_display'] }}</a>
+                    und nennen Sie Ihre Bestellnummer.</li>
+                <li>Sie erhalten von uns die Rücksendeadresse und eine Bestätigung.</li>
+                <li>Senden Sie die Ware vollständig und gut verpackt an die mitgeteilte Adresse in der Schweiz.</li>
+            </ol>
 
             <h5>Rücksendekosten</h5>
-            <p>Die Kosten der Rücksendung trägt die Kundin bzw. der Kunde (Richtwert CHF {{ number_format((float) config('merchant.returns.return_shipping_cost', 19.90), 2, '.', '') }}), ausser die Ware war defekt oder es wurde ein falscher Artikel geliefert – in diesen Fällen übernehmen wir die Rücksendekosten.</p>
+            <p>
+                @if ($customerPays)
+                    Die Kosten der Rücksendung trägt die Kundin bzw. der Kunde
+                    (Richtwert ca. <strong>{{ swiss_money($returnCost) }}</strong>, abhängig von Gewicht und Spedition).
+                    Ausgenommen sind Fälle, in denen wir eine falsche oder mangelhafte Ware geliefert haben – dann übernehmen wir die Rücksendekosten.
+                @else
+                    Wir übernehmen die Kosten der Rücksendung.
+                @endif
+            </p>
 
             <h5>Erstattung</h5>
-            <p>Nach Eingang und Prüfung der zurückgesandten Ware erstatten wir den Kaufpreis innerhalb von 14 Tagen auf dasselbe Zahlungsmittel.</p>
-            <p>Für sperrige Güter (Paletten, Öfen) können abweichende Rückgabebedingungen gelten – bitte kontaktieren Sie uns.</p>
+            <p>
+                Nach Eingang und Prüfung der Ware erstatten wir den Kaufpreis innerhalb von
+                <strong>{{ $refundDays }} Tagen</strong> auf dem ursprünglichen Zahlungsweg
+                (abzüglich allfälliger von der Kundschaft zu tragender Rücksendekosten, sofern vereinbart).
+            </p>
 
-            <h5>Fragen</h5>
-            <p>Bei Fragen zu einer Rückgabe erreichen Sie uns über unsere <a href="{{ route('pages.contact') }}">Kontaktseite</a>.</p>
+            <h5>Mängel / Garantie</h5>
+            <p>
+                Bei Mängeln gelten die gesetzlichen Gewährleistungsrechte der Schweiz.
+                Bitte melden Sie offensichtliche Transportschäden umgehend nach Erhalt mit Fotos an
+                <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a>.
+            </p>
+
+            <p class="text-caption mt-4">
+                Rücksendeadresse und Hilfe:
+                <a href="{{ route('pages.contact') }}">Kontaktseite</a> ·
+                <a href="{{ route('pages.terms') }}">AGB</a> ·
+                <a href="{{ route('pages.impressum') }}">Impressum</a>
+            </p>
         </div>
     </section>
 @endsection

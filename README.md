@@ -49,14 +49,20 @@ php artisan serve
 - **N° registre du commerce** : CH-241.4.020.905-9
 - Ces informations sont affichées sur les pages `/impressum`, `/agb` et `/datenschutz`, et doivent être tenues à jour en cas de changement (adresse, dirigeants, forme juridique).
 
-## Politique de livraison
+## Politique de livraison (marché CH uniquement)
 
-- Livraison **gratuite** vers la Suisse et l'Allemagne, sans montant minimum (`App\Services\Cart::shipping()`).
-- Préparation de commande : 0 à 1 jour ouvré.
-- Délai de livraison : 2 à 3 jours ouvrés.
+- Livraison **gratuite dans toute la Suisse**, sans montant minimum (`App\Services\Cart::shipping()` = `0.0`).
+- **Pas de livraison vers l'Allemagne / l'UE** : le checkout force le pays `CH`.
+- Délai annoncé storefront + GMC : **1 à 2 jours ouvrés** (`config/merchant.php` → `min_days` / `max_days`, affiché via `shipping_summary()`).
+- Handling feed GMC : `handling_min` / `handling_max` dans `config/merchant.php` (source de vérité pour le feed XML/TSV).
+- Prix catalogue **TTC** (MWST CH 8.1 %).
 
-Toute modification de cette politique doit être répercutée à la fois dans le code (`App\Services\Cart`) et dans les pages `/agb`, `/faq`, `/impressum` et la bannière du site (`resources/views/layouts/omniva.blade.php`).
+Toute modification doit être répercutée **simultanément** dans :
+`config/merchant.php`, `config/shop.php`, `config/feed.php`, `App\Services\Cart`, pages `/versand`, `/agb`, `/faq`, `/rueckgabe`, bannière `layouts/omniva.blade.php`, feed Merchant et JSON-LD produit.
 
 ## Conformité Google Merchant Center
 
-Le site expose les pages requises pour la validation Merchant Center : informations sur l'entreprise (`/impressum`), politique de retour et de livraison (`/agb`), confidentialité (`/datenschutz`), et coordonnées de contact vérifiables (`/kontakt`).
+- Marché feed : **CH / de / CHF**, livraison gratuite `0.00 CHF`.
+- Pages politiques crawlables : `/impressum`, `/versand`, `/rueckgabe`, `/agb`, `/datenschutz`, `/kontakt`.
+- Feeds : `/feeds/google-merchant-ch.xml` (+ TSV), jobs de refresh/sync.
+- JSON-LD produit sur la fiche (`GoogleProductData::toJsonLd()`).

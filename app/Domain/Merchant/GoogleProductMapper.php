@@ -55,7 +55,7 @@ class GoogleProductMapper
             title: TitleBuilder::build((string) $product->name, $brand),
             description: DescriptionSanitizer::plain(
                 $product->description ?: $product->short_description,
-                (string) $product->name
+                trim($brand.' '.(string) $product->name.' – Brennholz und Holzpellets von Heri Brennholz GmbH, Lieferung in der Schweiz.')
             ),
             link: gmc_absolute_url(route('product.show', $product->slug)),
             imageLink: gmc_absolute_url($primary->url),
@@ -67,7 +67,8 @@ class GoogleProductMapper
             brand: $brand,
             gtin: $gtin,
             mpn: $mpn,
-            identifierExists: true,
+            // GMC: identifier_exists=true only when GTIN and/or (MPN+brand) are present.
+            identifierExists: $gtin !== null || ($mpn !== '' && $brand !== ''),
             itemGroupId: $product->item_group_id ? (string) $product->item_group_id : null,
             googleProductCategory: $this->googleCategory($product),
             productType: $product->categories->pluck('name')->filter()->implode(' > '),

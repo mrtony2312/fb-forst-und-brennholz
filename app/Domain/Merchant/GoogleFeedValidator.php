@@ -19,17 +19,56 @@ class GoogleFeedValidator
         if ($dto->id === '' || strlen($dto->id) > 50) {
             $errors[] = 'id invalid';
         }
+
+        if ($dto->title === '' || mb_strlen($dto->title) > 150) {
+            $errors[] = 'title length invalid';
+        }
+
+        if (mb_strlen($dto->description) < 25 || mb_strlen($dto->description) > 5000) {
+            $errors[] = 'description length invalid';
+        }
+
+        if (trim($dto->brand) === '') {
+            $errors[] = 'brand missing';
+        }
+
+        if ($dto->identifierExists && $dto->gtin === null && ($dto->mpn === null || $dto->mpn === '')) {
+            $errors[] = 'identifier_exists true without gtin/mpn';
+        }
+
+        if ($dto->gtin !== null && ! Gtin::isValid($dto->gtin)) {
+            $errors[] = 'gtin invalid';
+        }
         if (mb_strlen($dto->title) > 150) {
             $errors[] = 'title too long';
         }
         if (! preg_match('/^\d+\.\d{2} [A-Z]{3}$/', $dto->price)) {
             $errors[] = 'price format';
         }
-        if (! str_starts_with($dto->link, 'http')) {
-            $errors[] = 'link not http';
+        if (! preg_match('#^https?://#i', $dto->link)) {
+            $errors[] = 'link must be absolute http(s)';
         }
-        if ($dto->gtin !== null && ! Gtin::isValid($dto->gtin)) {
-            $errors[] = 'gtin invalid';
+        if (! preg_match('#^https?://#i', $dto->imageLink)) {
+            $errors[] = 'image_link must be absolute http(s)';
+        }
+        // Production storefront is https — flag plain http when APP_URL is https.
+        if (str_starts_with(strtolower((string) config('app.url')), 'https://')) {
+            if (str_starts_with(strtolower($dto->link), 'http://')) {
+                $errors[] = 'link must be https absolute';
+            }
+            if (str_starts_with(strtolower($dto->imageLink), 'http://')) {
+                $errors[] = 'image_link must be https absolute';
+            }
+        }
+        if ($dto->currency !== '' && strtoupper($dto->currency) !== 'CHF') {
+            $errors[] = 'currency must be CHF for CH feed';
+        }
+        if ($dto->targetCountry !== '' && strtoupper($dto->targetCountry) !== 'CH') {
+            $errors[] = 'target_country must be CH';
+        }
+        if ($dto->shippingWeight !== null && $dto->shippingWeight !== ''
+            && ! preg_match('/^\d+(?:\.\d+)?\s?(kg|g|lb|oz)$/i', $dto->shippingWeight)) {
+            $errors[] = 'shipping_weight format invalid';
         }
         if (preg_match('/\b(SOLDE|PROMO|!!!)\b/u', $dto->title)) {
             $errors[] = 'title promo';

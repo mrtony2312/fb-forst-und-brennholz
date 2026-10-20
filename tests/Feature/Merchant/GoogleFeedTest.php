@@ -44,6 +44,11 @@ class GoogleFeedTest extends TestCase
         $this->assertStringNotContainsString('g:country>DE</g:country>', $xml);
         $this->assertStringNotContainsString('Liechtenstein', $xml);
         $this->assertStringNotContainsString('Deutschland', $xml);
+        $this->assertStringNotContainsString('Germany', $xml);
+        $this->assertStringContainsString('<g:min_handling_time>', $xml);
+        $this->assertStringContainsString('<g:max_handling_time>', $xml);
+        $this->assertStringContainsString('<g:country>CH</g:country>', $xml);
+        $this->assertMatchesRegularExpression('/<g:price>0\.00 CHF<\/g:price>/', $xml);
     }
 
     public function test_pdp_json_ld_matches_feed_price(): void
@@ -63,8 +68,11 @@ class GoogleFeedTest extends TestCase
         $pdp = $this->get(route('product.show', $product));
         $pdp->assertOk();
         $pdp->assertSee('data-gmc-price="49.50"', false);
-        $pdp->assertSee('1 bis 2 Werktage', false);
+        $pdp->assertSee('Schweiz', false);
+        $pdp->assertSee('CHF 0.00', false);
+        $pdp->assertSee('Heri Brennholz GmbH', false);
         $pdp->assertDontSee('wird bei der Bestellung berechnet', false);
+        $pdp->assertDontSee('Deutschland', false);
 
         $this->assertStringContainsString('"price":"49.50"', $pdp->getContent());
         $this->assertStringContainsString('"priceCurrency":"CHF"', $pdp->getContent());
@@ -78,7 +86,14 @@ class GoogleFeedTest extends TestCase
         foreach (['/kontakt', '/ueber-uns', '/versand', '/rueckgabe', '/datenschutz', '/agb'] as $path) {
             $this->get($path)->assertOk();
         }
-        $this->get('/versand')->assertSee('1 bis 2 Werktage', false);
+        $this->get('/versand')
+            ->assertSee('Schweiz', false)
+            ->assertSee('kostenlos', false)
+            ->assertDontSee('Deutschland', false);
+        $this->get('/impressum')
+            ->assertOk()
+            ->assertSee('CHE-228.719.493', false)
+            ->assertSee('Heri Brennholz GmbH', false);
         $this->get('/kasse')->assertRedirect();
     }
 }

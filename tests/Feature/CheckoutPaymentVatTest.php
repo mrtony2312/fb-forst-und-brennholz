@@ -29,12 +29,43 @@ class CheckoutPaymentVatTest extends TestCase
         $this->get('/faq')->assertSee('QR-Rechnung', false)->assertDontSee('TWINT', false);
     }
 
+    public function test_legal_pages_expose_business_identity(): void
+    {
+        $this->get('/impressum')
+            ->assertOk()
+            ->assertSee('Heri Brennholz GmbH', false)
+            ->assertSee('CHE-228.719.493', false)
+            ->assertSee('Fiderholzstrasse 7', false)
+            ->assertSee('Biberist', false);
+
+        $this->get('/versand')
+            ->assertOk()
+            ->assertSee('Schweiz', false)
+            ->assertSee('kostenlos', false);
+
+        $this->get('/rueckgabe')
+            ->assertOk()
+            ->assertSee('14', false)
+            ->assertSee('kein gesetzliches Widerrufsrecht', false);
+
+        $this->get('/kontakt')
+            ->assertOk()
+            ->assertSee('kontakt@heribrennholzgmbh.com', false)
+            ->assertSee('+41 78 609 95 16', false);
+    }
+
     public function test_checkout_stores_payment_method_and_rejects_inactive_ones(): void
     {
-        $product = Product::factory()->create(['price' => 100]);
+        $product = Product::factory()->create(['price' => 100, 'in_stock' => true]);
         $data = [
-            'first_name' => 'Anna', 'last_name' => 'Muster', 'email' => 'a@example.ch',
-            'address' => 'Bahnhofstrasse 1', 'city' => 'Bern', 'postcode' => '3000', 'country' => 'Schweiz',
+            'first_name' => 'Anna',
+            'last_name' => 'Muster',
+            'email' => 'a@example.ch',
+            'phone' => '+41 79 123 45 67',
+            'address' => 'Bahnhofstrasse 1',
+            'city' => 'Bern',
+            'postcode' => '3000',
+            'country' => 'CH',
         ];
 
         $this->withSession(['cart' => [$product->id => 1]])
@@ -45,6 +76,11 @@ class CheckoutPaymentVatTest extends TestCase
             ->post('/kasse', $data + ['payment_method' => 'vorkasse'])
             ->assertRedirect();
 
-        $this->assertSame('vorkasse', Order::first()->payment_method);
+        $order = Order::first();
+        $this->assertNotNull($order);
+        $this->assertSame('vorkasse', $order->payment_method);
+        $this->assertSame('CH', $order->country);
+        $this->assertSame(0.0, (float) $order->shipping);
+        $this->assertSame('CHF', $order->currency);
     }
 }

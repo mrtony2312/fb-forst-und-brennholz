@@ -74,8 +74,11 @@ class GoogleProductData
             'itemCondition' => 'https://schema.org/NewCondition',
             'seller' => [
                 '@type' => 'Organization',
-                'name' => (string) config('merchant.nap.legal_name', config('feed.company.legal_name', config('app.name'))),
+                '@id' => rtrim((string) config('app.url'), '/').'#organization',
+                'name' => (string) (company_nap()['legal_name'] ?? config('app.name')),
+                'url' => (string) (company_nap()['website'] ?? config('app.url')),
             ],
+            'priceValidUntil' => now()->addYear()->toDateString(),
             'hasMerchantReturnPolicy' => $this->returnPolicy(),
             'shippingDetails' => $this->shippingDetails(),
         ];
@@ -162,14 +165,14 @@ class GoogleProductData
                 '@type' => 'ShippingDeliveryTime',
                 'handlingTime' => [
                     '@type' => 'QuantitativeValue',
-                    'minValue' => (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 1)),
+                    'minValue' => (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 0)),
                     'maxValue' => (int) config('merchant.shipping.handling_max', config('feed.shipping_handling_time_max', 1)),
                     'unitCode' => 'DAY',
                 ],
                 'transitTime' => [
                     '@type' => 'QuantitativeValue',
-                    'minValue' => (int) config('merchant.shipping.transit_min', config('feed.shipping_transit_time_min', 0)),
-                    'maxValue' => (int) config('merchant.shipping.transit_max', config('feed.shipping_transit_time_max', 1)),
+                    'minValue' => (int) config('merchant.shipping.transit_min', config('feed.shipping_transit_time_min', 1)),
+                    'maxValue' => (int) config('merchant.shipping.transit_max', config('feed.shipping_transit_time_max', 2)),
                     'unitCode' => 'DAY',
                 ],
             ],

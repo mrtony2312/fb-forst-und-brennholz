@@ -79,7 +79,7 @@
                                 @endif
                                 <div class="text-caption cl-text-main">Preis in CHF inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MWST</div>
                                 <div class="tf-product-shipping cl-text-main">
-                                    Kostenlose Lieferung in der Schweiz in 1 bis 2 Werktagen.
+                                    {{ shipping_summary() }}
                                     <a href="{{ route('pages.versand') }}" class="text-decoration-underline link">Versandbedingungen</a>
                                 </div>
                                 <p class="mb-0">
@@ -151,8 +151,11 @@
                             <div class="tf-product-delivery">
                                 <div class="product-delivery">
                                     <i class="icon icon-Truck cl-text-main"></i>
-                                    <p class="text-caption">Voraussichtliche Lieferzeit:
-                                        <span class="cl-text-main fw-medium">1 bis 2 Werktage</span>
+                                    <p class="text-caption mb-0">
+                                        <strong>{{ shipping_summary() }}</strong>
+                                        · Versand CHF 0.00
+                                        · <a href="{{ route('pages.versand') }}">Details</a>
+                                        · <a href="{{ route('pages.rueckgabe') }}">Rückgabe {{ (int) config('merchant.returns.days', 14) }} Tage</a>
                                     </p>
                                 </div>
                                 <span class="br-line type-vertical"></span>
@@ -206,9 +209,10 @@
                                     <div id="faq-ship" class="collapse" data-bs-parent="#prdDes">
                                         <div class="accordion-content d-grid gap-14">
                                             <ul class="list text-caption">
-                                                <li><span class="br-dot"></span> Lieferung in 1 bis 2 Werktagen innerhalb der Schweiz.</li>
-                                                <li><span class="br-dot"></span> Kostenlose Lieferung in der ganzen Schweiz – ohne Mindestbestellwert.</li>
-                                                <li><span class="br-dot"></span> 14 Tage freiwilliges Rückgaberecht (siehe <a href="/rueckgabe">Rückgabe</a>).</li>
+                                                <li><span class="br-dot"></span> {{ shipping_summary() }}.</li>
+                                                <li><span class="br-dot"></span> Versandkosten CHF 0.00 – ohne Mindestbestellwert, nur Schweiz.</li>
+                                                <li><span class="br-dot"></span> {{ return_summary() }} – <a href="{{ route('pages.rueckgabe') }}">Rückgaberichtlinie</a>.</li>
+                                                <li><span class="br-dot"></span> Verkäufer: {{ company_nap()['legal_name'] }} · <a href="{{ route('pages.impressum') }}">Impressum</a>.</li>
                                             </ul>
                                         </div>
                                     </div>

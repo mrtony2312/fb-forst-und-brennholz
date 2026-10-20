@@ -84,10 +84,10 @@ class ProductInputBuilder
             'country' => (string) config('merchant.shipping.country', 'CH'),
             'service' => (string) config('merchant.shipping.service', config('feed.shipping_service')),
             'price' => $this->money((float) config('merchant.shipping.price', 0), $currency),
-            'minHandlingTime' => (string) (int) config('merchant.shipping.handling_min', 1),
+            'minHandlingTime' => (string) (int) config('merchant.shipping.handling_min', 0),
             'maxHandlingTime' => (string) (int) config('merchant.shipping.handling_max', 1),
-            'minTransitTime' => (string) (int) config('merchant.shipping.transit_min', 0),
-            'maxTransitTime' => (string) (int) config('merchant.shipping.transit_max', 1),
+            'minTransitTime' => (string) (int) config('merchant.shipping.transit_min', 1),
+            'maxTransitTime' => (string) (int) config('merchant.shipping.transit_max', 2),
         ]];
 
         return [

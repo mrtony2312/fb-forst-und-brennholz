@@ -74,9 +74,20 @@ class ProductFeedTsv
     private function build(): string
     {
         $lines = [implode("\t", self::HEADERS)];
-        $service = trim((string) config('feed.shipping_service', 'Standardversand'));
-        $handlingMin = (int) config('feed.shipping_handling_time_min', 1);
-        $handlingMax = (int) config('feed.shipping_handling_time_max', 1);
+        $service = trim((string) config(
+            'merchant.shipping.service',
+            config('feed.shipping_service', 'Standardversand')
+        ));
+        $service = str_replace(["\u{2013}", "\u{2014}", '–', '—'], '-', $service);
+        $service = preg_replace('/\s+/u', ' ', $service) ?? $service;
+        if ($service === '') {
+            $service = 'Standardversand';
+        }
+        $handlingMin = (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 0));
+        $handlingMax = (int) config('merchant.shipping.handling_max', config('feed.shipping_handling_time_max', 1));
+        if ($handlingMax < $handlingMin) {
+            $handlingMax = $handlingMin;
+        }
 
         Product::with(['images', 'categories'])
             ->orderBy('id')
@@ -87,7 +98,13 @@ class ProductFeedTsv
                         continue;
                     }
 
-                    $shipPrice = PriceFormatter::format((float) config('feed.shipping_price', 0), $dto->currency);
+                    $shipPrice = PriceFormatter::format(
+                        (float) config(
+                            'merchant.shipping.price',
+                            config('feed.shipping_price', config('shop.shipping.price', 0))
+                        ),
+                        $dto->currency
+                    );
                     $shipping = sprintf('CH:%s:%s', $service !== '' ? $service : 'Standardversand', $shipPrice);
 
                     $fields = [

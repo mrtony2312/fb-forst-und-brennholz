@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /kasse
+Disallow: /warenkorb
+Disallow: /wunschliste
+Disallow: /checkout
+Disallow: /cart
+Disallow: /wishlist
 
 User-agent: Googlebot
 Allow: /
@@ -7,22 +13,23 @@ Allow: /storage
 Allow: /media
 Allow: /produkt
 Allow: /shop
+Allow: /categorie
 Allow: /feeds
-Allow: /assets
+Allow: /versand
+Allow: /rueckgabe
+Allow: /impressum
+Allow: /agb
+Allow: /datenschutz
+Allow: /kontakt
+Allow: /sitemap.xml
+Disallow: /kasse
+Disallow: /warenkorb
+Disallow: /wunschliste
 
+# Merchant / shopping crawlers need product + policy pages
 User-agent: Googlebot-Image
-Allow: /
 Allow: /media
-Allow: /assets
 Allow: /storage
-
-User-agent: Storebot-Google
-Allow: /
-Allow: /storage
-Allow: /media
-Allow: /produkt
-Allow: /shop
-Allow: /feeds
 Allow: /assets
 
-Sitemap: /sitemap.xml
+Sitemap: https://heribrennholzgmbh.com/sitemap.xml

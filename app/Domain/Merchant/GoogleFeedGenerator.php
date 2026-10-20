@@ -113,15 +113,24 @@ class GoogleFeedGenerator
             }
         }
 
-        // Top-level handling times (recognized attributes).
-        $this->g($w, 'min_handling_time', (string) (int) config('feed.shipping_handling_time_min', 1));
-        $this->g($w, 'max_handling_time', (string) (int) config('feed.shipping_handling_time_max', 1));
+        // Top-level handling times — source of truth: merchant.shipping (fallback feed.*).
+        $minHandling = (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 0));
+        $maxHandling = (int) config('merchant.shipping.handling_max', config('feed.shipping_handling_time_max', 1));
+        if ($maxHandling < $minHandling) {
+            $maxHandling = $minHandling;
+        }
+        $this->g($w, 'min_handling_time', (string) $minHandling);
+        $this->g($w, 'max_handling_time', (string) $maxHandling);
 
-        // Shipping: only country / service / price (always recognized).
-        // Transit times → configure in Merchant Center shipping for CH.
-        $shipPrice = PriceFormatter::format((float) config('feed.shipping_price', 0), $dto->currency);
+        // Shipping: country / service / price only. Free CH must be 0.00 CHF.
+        // Transit times: also set in Merchant Center shipping settings for CH.
+        $shipPriceAmount = (float) config(
+            'merchant.shipping.price',
+            config('feed.shipping_price', config('shop.shipping.price', 0))
+        );
+        $shipPrice = PriceFormatter::format($shipPriceAmount, $dto->currency);
         $w->startElement('g:shipping');
-        $this->g($w, 'country', 'CH');
+        $this->g($w, 'country', (string) config('merchant.shipping.country', 'CH'));
         $this->g($w, 'service', $this->shippingService());
         $this->g($w, 'price', $shipPrice);
         $w->endElement();
@@ -131,7 +140,10 @@ class GoogleFeedGenerator
 
     private function shippingService(): string
     {
-        $service = trim((string) config('feed.shipping_service', 'Standardversand'));
+        $service = trim((string) config(
+            'merchant.shipping.service',
+            config('feed.shipping_service', 'Standardversand')
+        ));
         $service = str_replace(["\u{2013}", "\u{2014}", '–', '—'], '-', $service);
         $service = preg_replace('/\s+/u', ' ', $service) ?? $service;
 

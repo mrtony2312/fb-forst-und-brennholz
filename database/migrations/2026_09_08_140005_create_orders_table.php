@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('phone')->nullable();
+            $table->string('company')->nullable();
             $table->string('address');
             $table->string('address_2')->nullable();
             $table->string('city');
             $table->string('postcode');
-            $table->string('country')->default('FR');
+            $table->string('country', 2)->default('CH');
             $table->text('notes')->nullable();
             $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('shipping', 10, 2)->default(0);

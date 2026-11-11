@@ -1,14 +1,17 @@
 ﻿/.phpunit.cache
 /node_modules
-/public/build
 /public/hot
 /public/storage
+/dist
+# Keep compiled Vite assets in git for Hostinger PHP deploys without a Node build step.
+# Rebuild locally with `npm run build` before pushing when frontend sources change.
 /storage/*.key
 /storage/pail
 /vendor
 .env
 .env.backup
 .env.production
+.env.hostinger
 .phpactor.json
 .phpunit.result.cache
 Homestead.json

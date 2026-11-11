@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="/assets/css/animate.css">
     <link rel="stylesheet" href="/assets/css/image-compare-viewer.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/styles.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Favicon and Touch Icons  -->
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo/favicon-32.png">

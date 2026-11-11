@@ -1,12 +1,12 @@
 @extends('layouts.omniva')
 
 @section('title', 'Bestellung')
-@section('meta_description', 'Bestellung abschliessen bei Heri Brennholz GmbH – sichere Bestellung, Lieferung Schweiz, Preise inkl. MWST.')
+@section('meta_description', 'Bestellung abschliessen bei F & B Forst und Brennholz GmbH – sichere Bestellung, Lieferung Deutschland, Preise inkl. MwSt.')
 
 @section('content')
     @php
         $nap = company_nap();
-        $vatLabel = rtrim(rtrim(number_format((float) config('shop.vat_rate', 8.1), 1, '.', ''), '0'), '.');
+        $vatLabel = rtrim(rtrim(number_format((float) config('shop.vat_rate', 19), 1, '.', ''), '0'), '.');
         $methods = collect(config('shop.payment_methods', []))->filter(fn ($m) => $m['enabled'] ?? false);
     @endphp
     @include('partials.page-title', ['pageTitle' => 'Bestellung abschließen'])
@@ -23,13 +23,13 @@
                 <div class="col-md-4">
                     <div class="p-3 rounded-16 h-100" style="border:1px solid #e8e0d6;">
                         <strong style="color:#3cb54a;">{{ shipping_summary() }}</strong>
-                        <div class="text-caption mt-1">Versandkosten CHF 0.00 · nur Schweiz</div>
+                        <div class="text-caption mt-1">Versandkosten {{ shop_money(0) }} · nur Deutschland</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="p-3 rounded-16 h-100" style="border:1px solid #e8e0d6;">
-                        <strong>Preise inkl. {{ $vatLabel }}&nbsp;% MWST</strong>
-                        <div class="text-caption mt-1">Endpreise in CHF · {{ $nap['legal_name'] }}</div>
+                        <strong>Preise inkl. {{ $vatLabel }}&nbsp;% MwSt</strong>
+                        <div class="text-caption mt-1">Endpreise in {{ shop_currency() }} · {{ $nap['legal_name'] }}</div>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -43,7 +43,7 @@
             <form action="{{ route('checkout.store') }}" method="POST" class="row" novalidate>
                 @csrf
                 <div class="col-lg-7 mb-4">
-                    <h5 class="mb-3">Lieferadresse (Schweiz)</h5>
+                    <h5 class="mb-3">Lieferadresse (Deutschland)</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label text-caption" for="first_name">Vorname *</label>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-caption" for="phone">Telefon *</label>
-                            <input id="phone" class="form-control" type="tel" name="phone" value="{{ old('phone') }}" required maxlength="40" autocomplete="tel" placeholder="+41 …">
+                            <input id="phone" class="form-control" type="tel" name="phone" value="{{ old('phone') }}" required maxlength="40" autocomplete="tel" placeholder="+49 …">
                         </div>
                         <div class="col-12">
                             <label class="form-label text-caption" for="company">Firma (optional)</label>
@@ -83,8 +83,8 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label text-caption" for="country_display">Land</label>
-                            <input id="country_display" class="form-control" value="Schweiz" disabled aria-label="Land">
-                            <input type="hidden" name="country" value="CH">
+                            <input id="country_display" class="form-control" value="Deutschland" disabled aria-label="Land">
+                            <input type="hidden" name="country" value="DE">
                         </div>
                         <div class="col-12">
                             <label class="form-label text-caption" for="notes">Anmerkungen (optional)</label>
@@ -131,25 +131,25 @@
                         @foreach ($items as $item)
                             <div class="d-flex justify-content-between mb-2 text-caption">
                                 <span>{{ $item['product']->name }} × {{ $item['quantity'] }}</span>
-                                <span>{{ swiss_money($item['line_total']) }}</span>
+                                <span>{{ shop_money($item['line_total']) }}</span>
                             </div>
                         @endforeach
                         <hr>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Zwischensumme</span>
-                            <span>{{ swiss_money($cart->subtotal()) }}</span>
+                            <span>{{ shop_money($cart->subtotal()) }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Versand (CH, kostenlos)</span>
-                            <span>{{ swiss_money($cart->shipping()) }}</span>
+                            <span>Versand (DE, kostenlos)</span>
+                            <span>{{ shop_money($cart->shipping()) }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 text-caption">
-                            <span>inkl. MWST ({{ $vatLabel }}&nbsp;%)</span>
-                            <span>{{ swiss_money(vat_included($cart->total())) }}</span>
+                            <span>inkl. MwSt ({{ $vatLabel }}&nbsp;%)</span>
+                            <span>{{ shop_money(vat_included($cart->total())) }}</span>
                         </div>
                         <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
-                            <span>Total</span>
-                            <span>{{ swiss_money($cart->total()) }}</span>
+                            <span>Gesamt</span>
+                            <span>{{ shop_money($cart->total()) }}</span>
                         </div>
                         <button type="submit" class="tf-btn animate-btn w-100 justify-content-center">
                             Kostenpflichtig bestellen

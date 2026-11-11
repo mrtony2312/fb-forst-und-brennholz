@@ -55,6 +55,7 @@ class Cart
 
         return Product::with('images')->findMany(array_keys($cart))->map(function (Product $p) use ($cart) {
             $qty = (int) $cart[$p->id];
+
             return [
                 'product' => $p,
                 'quantity' => $qty,
@@ -75,7 +76,7 @@ class Cart
 
     public function shipping(): float
     {
-        // Kostenlose Lieferung in der ganzen Schweiz.
+        // Kostenlose Lieferung nach Deutschland.
         return 0.0;
     }
 

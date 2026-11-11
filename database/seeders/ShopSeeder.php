@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domain\Merchant\Support\DescriptionSanitizer;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -21,6 +22,7 @@ class ShopSeeder extends Seeder
             $path = database_path($rel);
             if (! is_file($path)) {
                 $this->command->warn("{$rel} not found — skipped.");
+
                 continue;
             }
 
@@ -57,7 +59,7 @@ class ShopSeeder extends Seeder
                 $base = $slug;
                 $n = 2;
                 while (isset($slugOwner[$slug]) && $slugOwner[$slug] !== ($p['source_id'] ?? null)) {
-                    $slug = $base . '-' . $n++;
+                    $slug = $base.'-'.$n++;
                 }
                 $slugOwner[$slug] = $p['source_id'] ?? null;
 
@@ -70,16 +72,18 @@ class ShopSeeder extends Seeder
                         'sku' => $p['sku'] ?? null,
                         'gtin' => $p['gtin'] ?? null,
                         'type' => $p['type'] ?? 'simple',
-                        'short_description' => $p['short_description'] ?? null,
-                        'description' => $p['description'] ?? null,
+                        'short_description' => DescriptionSanitizer::html($p['short_description'] ?? null) ?: null,
+                        'description' => DescriptionSanitizer::html($p['description'] ?? null) ?: null,
                         'price' => $p['price'],
                         'regular_price' => $p['regular_price'],
                         'sale_price' => $p['sale_price'],
                         'price_per_unit' => $p['price_per_unit'] ?? null,
-                        'price_per_unit_label' => $p['price_per_unit_label'] ?? null,
+                        'price_per_unit_label' => isset($p['price_per_unit_label'])
+                            ? preg_replace('/^CHF\//', shop_currency().'/', (string) $p['price_per_unit_label'])
+                            : null,
                         // Keine Aktionspreise ohne belegte, datierte Aktion (Merchant-Center-Richtlinie).
                         'on_sale' => false,
-                        'currency' => $p['currency'] ?? 'CHF',
+                        'currency' => shop_currency(),
                         'in_stock' => $p['in_stock'] ?? true,
                         'stock_availability' => $p['stock_availability'] ?? null,
                         'weight' => $p['weight'] ?? null,
@@ -142,7 +146,7 @@ class ShopSeeder extends Seeder
         }
 
         $realGroups = array_filter($groupSizes, fn ($n) => $n >= 2);
-        $this->command->info('Seeded ' . Category::count() . ' categories, ' . Product::count() . ' products, ' . ProductImage::count() . ' images.');
-        $this->command->info(count($realGroups) . ' variant groups (item_group_id) created: ' . collect($realGroups)->map(fn ($n, $label) => "{$label}={$n}")->implode(', '));
+        $this->command->info('Seeded '.Category::count().' categories, '.Product::count().' products, '.ProductImage::count().' images.');
+        $this->command->info(count($realGroups).' variant groups (item_group_id) created: '.collect($realGroups)->map(fn ($n, $label) => "{$label}={$n}")->implode(', '));
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.omniva')
 
 @section('title', 'Datenschutzerklärung')
-@section('meta_description', 'Datenschutzerklärung der Heri Brennholz GmbH: Erhebung, Nutzung und Schutz Ihrer Daten.')
+@section('meta_description', 'Datenschutzerklärung der F & B Forst und Brennholz GmbH: Erhebung, Nutzung und Schutz Ihrer Daten.')
 
 @section('content')
     @php $nap = company_nap(); @endphp
@@ -17,7 +17,10 @@
                 {{ $nap['postal_code'] }} {{ $nap['locality'] ?? $nap['city'] }}, {{ $nap['country_name'] }}<br>
                 E-Mail: <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a><br>
                 Telefon: <a href="tel:{{ $nap['telephone'] }}">{{ $nap['telephone_display'] }}</a><br>
-                UID: {{ $nap['vat_id'] ?? 'CHE-228.719.493' }}
+                {{ $nap['hr_number'] ?? 'HRB 40744' }} · {{ $nap['register_court'] ?? 'Amtsgericht Nürnberg' }}
+                @if (! empty($nap['vat_id']))
+                    <br>USt-IdNr.: {{ $nap['vat_id'] }}
+                @endif
             </p>
 
             <h5>2. Erhobene Daten</h5>
@@ -32,7 +35,7 @@
             <h5>3. Zwecke und Rechtsgrundlagen</h5>
             <p>Die Verarbeitung erfolgt zur Vertragsabwicklung, Kundenkommunikation, Betrugsprävention,
                 gesetzlichen Aufbewahrungspflichten und – soweit erforderlich – aufgrund berechtigter Interessen
-                an einem sicheren und effizienten Online-Shop (Schweizer DSG).</p>
+                an einem sicheren und effizienten Online-Shop (DSGVO / BDSG).</p>
 
             <h5>4. Weitergabe</h5>
             <p>
@@ -61,10 +64,10 @@
 
             <h5>8. Ihre Rechte</h5>
             <p>
-                Sie haben nach anwendbarem Schweizer Datenschutzrecht u.&nbsp;a. Rechte auf Auskunft, Berichtigung,
-                Löschung, Einschränkung und Widerspruch. Anfragen an
+                Sie haben nach der DSGVO u.&nbsp;a. Rechte auf Auskunft, Berichtigung,
+                Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch. Anfragen an
                 <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a>.
-                Sie können sich zudem an den Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB) wenden.
+                Sie können sich zudem an die zuständige Datenschutzaufsichtsbehörde wenden.
             </p>
 
             <h5>9. Änderungen</h5>

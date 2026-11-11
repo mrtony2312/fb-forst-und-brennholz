@@ -7,27 +7,27 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title', 'Heri Brennholz') — Brennholz, Pellets &amp; Scheite aus der Schweiz</title>
+    <title>@yield('title', config('app.name')) — Brennholz, Pellets &amp; Scheite nach Deutschland</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-        content="Heri Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in der Schweiz in 1 bis 2 Werktagen.">
+        content="F & B Forst und Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in Deutschland in 2 bis 5 Werktagen.">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('title', 'Heri Brennholz') — Brennholz, Pellets &amp; Scheite aus der Schweiz">
+    <meta property="og:title" content="@yield('title', config('app.name')) — Brennholz, Pellets &amp; Scheite nach Deutschland">
     <meta property="og:description"
-        content="Heri Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in der Schweiz in 1 bis 2 Werktagen.">
-    <meta property="og:image" content="{{ asset('assets/images/thumb.jpg') }}">
+        content="F & B Forst und Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in Deutschland in 2 bis 5 Werktagen.">
+    <meta property="og:image" content="{{ asset('assets/images/logo/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Heri Brennholz GmbH">
+    <meta property="og:site_name" content="F & B Forst und Brennholz GmbH">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'Heri Brennholz') — Brennholz, Pellets &amp; Scheite aus der Schweiz">
+    <meta name="twitter:title" content="@yield('title', config('app.name')) — Brennholz, Pellets &amp; Scheite nach Deutschland">
     <meta name="twitter:description"
-        content="Heri Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in der Schweiz in 1 bis 2 Werktagen.">
-    <meta name="twitter:image" content="{{ asset('assets/images/thumb.jpg') }}">
+        content="F & B Forst und Brennholz GmbH – Brennholz, Holzpellets und Holzbriketts. Kostenlose Lieferung in Deutschland in 2 bis 5 Werktagen.">
+    <meta name="twitter:image" content="{{ asset('assets/images/logo/logo.png') }}">
 
     <!-- font -->
     <link rel="stylesheet" href="/assets/fonts/fonts.css">
@@ -59,27 +59,27 @@
                     '@id' => url('/').'#organization',
                     'name' => $co['legal_name'],
                     'legalName' => $co['legal_name'],
-                    'alternateName' => $co['brand_name'] ?? 'Heri Brennholz',
+                    'alternateName' => $co['brand_name'] ?? 'F & B Forst und Brennholz',
                     'url' => $co['website'] ?? url('/'),
-                    'logo' => asset('assets/images/logo/logo.png'),
+                    'logo' => asset('assets/images/logo/logo-header.png'),
                     'email' => $co['email'],
-                    'telephone' => $co['telephone_display'] ?? $co['phone'] ?? '+41 78 609 95 16',
-                    'vatID' => $co['vat_id'] ?? 'CHE-228.719.493',
-                    'taxID' => $co['vat_id'] ?? 'CHE-228.719.493',
+                    'telephone' => $co['telephone_display'] ?? $co['phone'] ?? '+49 1525 5641834',
+                    'vatID' => $co['vat_id'] ?? null,
+                    'taxID' => $co['hr_number'] ?? 'HRB 40744',
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => $co['street'],
                         'postalCode' => $co['postal_code'],
                         'addressLocality' => $co['locality'] ?? $co['city'],
-                        'addressRegion' => $co['region'] ?? 'Solothurn',
-                        'addressCountry' => $co['country'] ?? 'CH',
+                        'addressRegion' => $co['region'] ?? 'Bayern',
+                        'addressCountry' => $co['country'] ?? 'DE',
                     ],
                     'contactPoint' => [
                         '@type' => 'ContactPoint',
                         'contactType' => 'customer service',
                         'telephone' => $co['telephone_display'] ?? $co['phone'],
                         'email' => $co['email'],
-                        'areaServed' => 'CH',
+                        'areaServed' => 'DE',
                         'availableLanguage' => ['de', 'fr'],
                         'hoursAvailable' => [
                             '@type' => 'OpeningHoursSpecification',
@@ -96,21 +96,21 @@
                     'url' => $co['website'] ?? url('/'),
                     'telephone' => $co['telephone_display'] ?? $co['phone'],
                     'email' => $co['email'],
-                    'currenciesAccepted' => 'CHF',
+                    'currenciesAccepted' => shop_currency(),
                     'paymentAccepted' => payment_methods_text(),
-                    'areaServed' => ['CH'],
+                    'areaServed' => ['DE'],
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => $co['street'],
                         'postalCode' => $co['postal_code'],
                         'addressLocality' => $co['locality'] ?? $co['city'],
-                        'addressRegion' => $co['region'] ?? 'Solothurn',
-                        'addressCountry' => $co['country'] ?? 'CH',
+                        'addressRegion' => $co['region'] ?? 'Bayern',
+                        'addressCountry' => $co['country'] ?? 'DE',
                     ],
                     'parentOrganization' => ['@id' => url('/').'#organization'],
                     'hasMerchantReturnPolicy' => [
                         '@type' => 'MerchantReturnPolicy',
-                        'applicableCountry' => 'CH',
+                        'applicableCountry' => 'DE',
                         'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
                         'merchantReturnDays' => $returnDays,
                         'returnMethod' => 'https://schema.org/ReturnByMail',
@@ -123,12 +123,12 @@
                         '@type' => 'OfferShippingDetails',
                         'shippingDestination' => [
                             '@type' => 'DefinedRegion',
-                            'addressCountry' => 'CH',
+                            'addressCountry' => 'DE',
                         ],
                         'shippingRate' => [
                             '@type' => 'MonetaryAmount',
                             'value' => $shipPrice,
-                            'currency' => 'CHF',
+                            'currency' => shop_currency(),
                         ],
                         'deliveryTime' => [
                             '@type' => 'ShippingDeliveryTime',
@@ -149,7 +149,7 @@
                 ],
                 [
                     '@type' => 'WebSite',
-                    'name' => $co['brand_name'] ?? 'Heri Brennholz',
+                    'name' => $co['brand_name'] ?? 'F & B Forst und Brennholz',
                     'url' => url('/'),
                     'publisher' => ['@id' => url('/').'#organization'],
                     'potentialAction' => [
@@ -197,13 +197,23 @@
         .boire-cart-empty { text-align: center; padding: 48px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 
         /* ===== Kopfzeile / Logo ===== */
-        .tf-header .header-inner { min-height: 92px; }
+        .tf-header .header-inner { min-height: 104px; }
         .tf-header .header-center .logo-site { display: inline-flex; align-items: center; }
         .tf-header .logo-site img,
-        .tf-footer .logo-site img { width: auto; height: 68px; max-width: 180px; object-fit: contain; }
+        .tf-footer .logo-site img {
+            width: auto;
+            height: 78px;
+            max-width: 360px;
+            object-fit: contain;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            filter: none;
+        }
         @media (max-width: 767px) {
-            .tf-header .header-inner { min-height: 76px; }
-            .tf-header .logo-site img { height: 54px; }
+            .tf-header .header-inner { min-height: 88px; }
+            .tf-header .logo-site img { height: 58px; max-width: 250px; }
         }
 
         /* ===== Zahlungsarten (Fußzeile) ===== */
@@ -260,7 +270,7 @@
                                     <!-- slide 2 -->
                                     <div class="swiper-slide">
                                         <div class="text-adver text-white text-caption">
-                                            Heri Brennholz GmbH · Biberist · UID CHE-228.719.493
+                                            F &amp; B Forst und Brennholz GmbH · Hohenfels · HRB 40744
                                             <span class="br-line bg-white"></span>
                                             <a href="{{ route('pages.impressum') }}" class="fw-semibold link-underline">
                                                 Impressum
@@ -270,7 +280,7 @@
                                     <!-- slide 3 -->
                                     <div class="swiper-slide">
                                         <div class="text-adver text-white text-caption">
-                                            Preise inkl. MWST · Zahlung: {{ payment_methods_text() }}
+                                            Preise inkl. MwSt · Zahlung: {{ payment_methods_text() }}
                                             <span class="br-line bg-white"></span>
                                             <a href="{{ route('pages.contact') }}" class="fw-semibold link-underline">
                                                 Kontakt
@@ -352,7 +362,7 @@
                         <div class="header-center">
                             <h1>
                                 <a href="/" class="logo-site">
-                                    <img width="76" height="68" src="/assets/images/logo/logo.png" alt="Heri Brennholz GmbH">
+                                    <img width="320" height="160" src="/assets/images/logo/logo-header.png?v=4" alt="F & B Forst und Brennholz GmbH">
                                 </a>
                             </h1>
                         </div>
@@ -360,13 +370,13 @@
                             <ul class="nav-icon-list tf-list justify-content-end">
                                 <li class="d-none d-sm-block">
                                     <a href="#search" data-bs-toggle="offcanvas" class="nav-icon-item link"
-                                        aria-label="Open search">
+                                        aria-label="Suche öffnen">
                                         <span class="icon icon-Search" aria-hidden="true"></span>
                                     </a>
                                 </li>
 
                                 <li class="d-none d-sm-block">
-                                    <a href="{{ route('wishlist.index') }}" class="nav-icon-item link has-number" aria-label="Favoris">
+                                    <a href="{{ route('wishlist.index') }}" class="nav-icon-item link has-number" aria-label="Merkliste">
                                         <i class="icon icon-Hearth2"></i>
                                         <span class="number-order js-wishlist-count">{{ $wishlist->count() }}</span>
                                     </a>
@@ -405,36 +415,36 @@
                     <div class="footer-inner_wrap">
                         <div class="ft-infor">
                             <a href="/" class="logo-site">
-                                <img loading="lazy" width="76" height="68" src="/assets/images/logo/logo.png"
-                                    alt="Heri Brennholz GmbH">
+                                <img loading="lazy" width="320" height="160" src="/assets/images/logo/logo-header.png?v=4"
+                                    alt="F & B Forst und Brennholz GmbH">
                             </a>
                             <ul class="list-infor-contact tf-list vertical gap-15">
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-DotLocation"></i>
                                     </span>
-                                    <a href="https://www.google.com/maps?q={{ urlencode(($co['street'] ?? 'Fiderholzstrasse 7').', '.($co['postal_code'] ?? '4562').' '.($co['locality'] ?? $co['city'] ?? 'Biberist').', Schweiz') }}"
+                                    <a href="https://www.google.com/maps?q={{ urlencode(($co['street'] ?? 'Dekan-Schnitter-Straße 4').', '.($co['postal_code'] ?? '92366').' '.($co['locality'] ?? $co['city'] ?? 'Hohenfels').', Deutschland') }}"
                                         class="text-caption fw-medium link-underline link-black"
                                         target="_blank" rel="noopener">
-                                        {{ $co['street'] ?? 'Fiderholzstrasse 7' }}, {{ $co['postal_code'] ?? '4562' }} {{ $co['locality'] ?? $co['city'] ?? 'Biberist' }}, {{ $co['country_name'] ?? 'Schweiz' }}
+                                        {{ $co['street'] ?? 'Dekan-Schnitter-Straße 4' }}, {{ $co['postal_code'] ?? '92366' }} {{ $co['locality'] ?? $co['city'] ?? 'Hohenfels' }}, {{ $co['country_name'] ?? 'Deutschland' }}
                                     </a>
                                 </li>
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-Phone"></i>
                                     </span>
-                                    <a href="tel:{{ $co['telephone'] ?? '+41786099516' }}"
+                                    <a href="tel:{{ $co['telephone'] ?? '+4915255641834' }}"
                                         class="text-caption fw-medium link-underline link-black">
-                                        {{ $co['telephone_display'] ?? $co['phone'] ?? '+41 78 609 95 16' }}
+                                        {{ $co['telephone_display'] ?? $co['phone'] ?? '+49 1525 5641834' }}
                                     </a>
                                 </li>
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-LetterEnvelope"></i>
                                     </span>
-                                    <a href="mailto:{{ $co['email'] ?? 'kontakt@heribrennholzgmbh.com' }}"
+                                    <a href="mailto:{{ $co['email'] ?? 'info@fbforstundbrennholzgmbh.com' }}"
                                         class="text-caption fw-medium link-underline link-black">
-                                        {{ $co['email'] ?? 'kontakt@heribrennholzgmbh.com' }}
+                                        {{ $co['email'] ?? 'info@fbforstundbrennholzgmbh.com' }}
                                     </a>
                                 </li>
                                 <li class="infor-contact_item">
@@ -541,7 +551,7 @@
                                                 <i class="icon icon-ArrowRight" aria-hidden="true"></i>
                                             </button>
                                         </fieldset>
-                                        <label class="text-caption d-flex gap-2 text-start mt-2"><input type="checkbox" name="newsletter_consent" value="1" required> <span>Ich möchte Angebote per E-Mail erhalten und habe die <a href="/datenschutz" class="text-decoration-underline">Datenschutzerklärung</a> gelesen. Abmeldung jederzeit per E-Mail an kontakt@heribrennholzgmbh.com.</span></label>
+                                        <label class="text-caption d-flex gap-2 text-start mt-2"><input type="checkbox" name="newsletter_consent" value="1" required> <span>Ich möchte Angebote per E-Mail erhalten und habe die <a href="/datenschutz" class="text-decoration-underline">Datenschutzerklärung</a> gelesen. Abmeldung jederzeit per E-Mail an info@fbforstundbrennholzgmbh.com.</span></label>
                                     </form>
                                     <p>
                                         Weitere Informationen finden Sie in unserer
@@ -558,10 +568,10 @@
                     <div class="footer-bottom_wrap">
                         <span class="br-line fake-class top-0"></span>
                         <div class="text-nocopy text-caption cl-text-main">
-                            © {{ date('Y') }} Heri Brennholz GmbH. Alle Rechte vorbehalten.
+                            © {{ date('Y') }} F &amp; B Forst und Brennholz GmbH. Alle Rechte vorbehalten.
                         </div>
                         <div class="text-caption cl-text-main">
-                            Preise in CHF inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MWST · Zahlungsarten: {{ payment_methods_text() }}
+                            Preise in {{ shop_currency() }} inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MwSt · Zahlungsarten: {{ payment_methods_text() }}
                         </div>
                     </div>
                 </div>
@@ -604,13 +614,13 @@
                     <div class="tf-list vertical gap-6">
                         <a href="{{ route('pages.contact') }}" class="d-block text-caption">
                             Adresse:
-                            <span class="fw-medium">Fiderholzstrasse 7, 4562 Biberist, Schweiz</span>
+                            <span class="fw-medium">Sitz: Dekan-Schnitter-Straße 4 · Lager: Haarziegelhütte 10a, 92366 Hohenfels</span>
                         </a>
-                        <a href="mailto:kontakt@heribrennholzgmbh.com" class="d-block text-caption">
-                            E-Mail: <span class="fw-medium">kontakt@heribrennholzgmbh.com</span>
+                        <a href="mailto:info@fbforstundbrennholzgmbh.com" class="d-block text-caption">
+                            E-Mail: <span class="fw-medium">info@fbforstundbrennholzgmbh.com</span>
                         </a>
-                        <a href="tel:+41786099516" class="d-block text-caption">
-                            Telefon: <span class="fw-medium">+41 78 609 95 16</span>
+                        <a href="tel:+4915255641834" class="d-block text-caption">
+                            Telefon: <span class="fw-medium">+49 1525 5641834</span>
                         </a>
                     </div>
                 </div>
@@ -693,7 +703,7 @@
                 <span class="toolbar-icon">
                     <i class="icon icon-HearchStroke"></i>
                 </span>
-                <span class="toolbar-label">Favoriten</span>
+                <span class="toolbar-label">Merkliste</span>
             </a>
         </div>
         <div class="toolbar-item">
@@ -801,7 +811,7 @@
         clearTimeout(t._h);t._h=setTimeout(function(){t.style.opacity='0';},2600);
     }
 
-    // ---- Favoris ----
+    // ---- Merkliste ----
     document.addEventListener('click', function(e){
         var a=e.target.closest('.js-wishlist');
         if(!a) return;

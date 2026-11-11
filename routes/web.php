@@ -7,7 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
-
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -22,9 +22,9 @@ Route::get('/kategorie/{category:slug}', [ShopController::class, 'category'])->n
 Route::get('/produkt/{product:slug}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/produkt/{product:slug}/vorschau', [ProductController::class, 'quickview'])->name('product.quickview');
 
-Route::get('/favoriten', [\App\Http\Controllers\WishlistController::class, 'index'])->name('wishlist.index');
-Route::post('/favoriten', [\App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
-Route::delete('/favoriten', [\App\Http\Controllers\WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::get('/favoriten', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/favoriten', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::delete('/favoriten', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
 Route::get('/warenkorb', [CartController::class, 'index'])->name('cart.index');
 Route::get('/warenkorb/inhalt', [CartController::class, 'drawer'])->name('cart.drawer');
@@ -54,10 +54,13 @@ Route::redirect('/retours', '/rueckgabe', 301);
 Route::redirect('/confidentialite', '/datenschutz', 301);
 Route::redirect('/cgv', '/agb', 301);
 
-Route::get('/feeds/google-merchant-ch.xml', [FeedController::class, 'index'])->name('feed.google');
+Route::get('/feeds/google-merchant-de.xml', [FeedController::class, 'index'])->name('feed.google');
 Route::get('/feeds/google-shopping.xml', [FeedController::class, 'index'])->name('feed.google.shopping');
-Route::get('/feeds/google-merchant-ch.xml/download', [FeedController::class, 'download'])->name('feed.google.download');
-Route::get('/feeds/google-merchant-ch.tsv', [FeedController::class, 'tsv'])->name('feed.google.tsv');
+Route::get('/feeds/google-merchant-de.xml/download', [FeedController::class, 'download'])->name('feed.google.download');
+Route::get('/feeds/google-merchant-de.tsv', [FeedController::class, 'tsv'])->name('feed.google.tsv');
 
-Route::redirect('/feed/google-merchant.xml', '/feeds/google-merchant-ch.xml', 301);
-Route::redirect('/feed/google-merchant.xml/download', '/feeds/google-merchant-ch.xml/download', 301);
+Route::redirect('/feeds/google-merchant-ch.xml', '/feeds/google-merchant-de.xml', 301);
+Route::redirect('/feeds/google-merchant-ch.xml/download', '/feeds/google-merchant-de.xml/download', 301);
+Route::redirect('/feeds/google-merchant-ch.tsv', '/feeds/google-merchant-de.tsv', 301);
+Route::redirect('/feed/google-merchant.xml', '/feeds/google-merchant-de.xml', 301);
+Route::redirect('/feed/google-merchant.xml/download', '/feeds/google-merchant-de.xml/download', 301);

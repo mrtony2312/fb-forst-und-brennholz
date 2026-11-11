@@ -26,14 +26,14 @@ class GoogleProductData
         public readonly string $googleProductCategory,
         public readonly string $productType,
         public readonly ?string $shippingWeight,
-        public readonly ?string $unitPricingMeasure = null,
-        public readonly ?string $unitPricingBaseMeasure = null,
-        public readonly ?string $shippingLabel = null,
         public readonly string $contentLanguage,
         public readonly string $targetCountry,
         public readonly float $priceAmount,
         public readonly string $currency,
         public readonly bool $inStock,
+        public readonly ?string $unitPricingMeasure = null,
+        public readonly ?string $unitPricingBaseMeasure = null,
+        public readonly ?string $shippingLabel = null,
     ) {}
 
     public function schemaAvailability(): string
@@ -74,11 +74,8 @@ class GoogleProductData
             'itemCondition' => 'https://schema.org/NewCondition',
             'seller' => [
                 '@type' => 'Organization',
-                '@id' => rtrim((string) config('app.url'), '/').'#organization',
-                'name' => (string) (company_nap()['legal_name'] ?? config('app.name')),
-                'url' => (string) (company_nap()['website'] ?? config('app.url')),
+                'name' => (string) config('merchant.nap.legal_name', config('feed.company.legal_name', config('app.name'))),
             ],
-            'priceValidUntil' => now()->addYear()->toDateString(),
             'hasMerchantReturnPolicy' => $this->returnPolicy(),
             'shippingDetails' => $this->shippingDetails(),
         ];
@@ -123,7 +120,7 @@ class GoogleProductData
 
         $policy = [
             '@type' => 'MerchantReturnPolicy',
-            'applicableCountry' => $this->targetCountry !== '' ? $this->targetCountry : 'CH',
+            'applicableCountry' => $this->targetCountry !== '' ? $this->targetCountry : 'DE',
             'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
             'merchantReturnDays' => $days,
             'returnMethod' => 'https://schema.org/ReturnByMail',
@@ -136,7 +133,7 @@ class GoogleProductData
             $policy['returnShippingFeesAmount'] = [
                 '@type' => 'MonetaryAmount',
                 'value' => number_format($returnCost, 2, '.', ''),
-                'currency' => $this->currency !== '' ? $this->currency : 'CHF',
+                'currency' => $this->currency !== '' ? $this->currency : shop_currency(),
             ];
         }
 
@@ -148,14 +145,14 @@ class GoogleProductData
      */
     public function shippingDetails(): array
     {
-        $country = (string) config('merchant.shipping.country', config('feed.target_country', 'CH'));
+        $country = (string) config('merchant.shipping.country', config('feed.target_country', 'DE'));
 
         return [
             '@type' => 'OfferShippingDetails',
             'shippingRate' => [
                 '@type' => 'MonetaryAmount',
                 'value' => number_format((float) config('merchant.shipping.price', config('feed.shipping_price', 0)), 2, '.', ''),
-                'currency' => $this->currency !== '' ? $this->currency : 'CHF',
+                'currency' => $this->currency !== '' ? $this->currency : shop_currency(),
             ],
             'shippingDestination' => [
                 '@type' => 'DefinedRegion',
@@ -165,14 +162,14 @@ class GoogleProductData
                 '@type' => 'ShippingDeliveryTime',
                 'handlingTime' => [
                     '@type' => 'QuantitativeValue',
-                    'minValue' => (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 0)),
+                    'minValue' => (int) config('merchant.shipping.handling_min', config('feed.shipping_handling_time_min', 1)),
                     'maxValue' => (int) config('merchant.shipping.handling_max', config('feed.shipping_handling_time_max', 1)),
                     'unitCode' => 'DAY',
                 ],
                 'transitTime' => [
                     '@type' => 'QuantitativeValue',
-                    'minValue' => (int) config('merchant.shipping.transit_min', config('feed.shipping_transit_time_min', 1)),
-                    'maxValue' => (int) config('merchant.shipping.transit_max', config('feed.shipping_transit_time_max', 2)),
+                    'minValue' => (int) config('merchant.shipping.transit_min', config('feed.shipping_transit_time_min', 0)),
+                    'maxValue' => (int) config('merchant.shipping.transit_max', config('feed.shipping_transit_time_max', 1)),
                     'unitCode' => 'DAY',
                 ],
             ],

@@ -15,7 +15,7 @@ class GenerateGoogleFeedCommand extends Command
 {
     protected $signature = 'merchant:google-feed';
 
-    protected $description = 'Generate the Google Merchant Center XML/TSV feeds (CH / de / CHF) with empty-feed protection';
+    protected $description = 'Generate the Google Merchant Center XML/TSV feeds (DE / de / EUR) with empty-feed protection';
 
     public function handle(
         ProductFeed $feed,
@@ -61,14 +61,14 @@ class GenerateGoogleFeedCommand extends Command
 
             $writer->writeXmlAtomically($xml, [
                 $storageDir.'/google-shopping.xml',
-                $storageDir.'/google-merchant-ch.xml',
+                $storageDir.'/google-merchant-de.xml',
                 $publicDir.'/google-shopping.xml',
-                $publicDir.'/google-merchant-ch.xml',
+                $publicDir.'/google-merchant-de.xml',
             ]);
 
             $writer->writeTextAtomically($tsvBody, [
-                $storageDir.'/google-merchant-ch.tsv',
-                $publicDir.'/google-merchant-ch.tsv',
+                $storageDir.'/google-merchant-de.tsv',
+                $publicDir.'/google-merchant-de.tsv',
             ], $items);
 
             // Keep cache aligned with the file just written.
@@ -88,9 +88,9 @@ class GenerateGoogleFeedCommand extends Command
             $withUnit,
             strlen($xml)
         ));
-        $this->line('Public XML: '.url('/feeds/google-merchant-ch.xml'));
-        $this->line('Public TSV: '.url('/feeds/google-merchant-ch.tsv'));
-        $this->line('Register in Merchant Center: country=CH, language=German (de), currency=CHF.');
+        $this->line('Public XML: '.url('/feeds/google-merchant-de.xml'));
+        $this->line('Public TSV: '.url('/feeds/google-merchant-de.tsv'));
+        $this->line('Register in Merchant Center: country=DE, language=German (de), currency='.shop_currency().'.');
 
         return self::SUCCESS;
     }

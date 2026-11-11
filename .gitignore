@@ -21,6 +21,11 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/.agents
+/.claude
+/.cursor
+/.grok
+.mcp.json
 /database/*.sqlite
 /database/*.sqlite-journal
 storage/app/google/*.json

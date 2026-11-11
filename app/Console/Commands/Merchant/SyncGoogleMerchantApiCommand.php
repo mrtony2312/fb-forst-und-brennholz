@@ -12,7 +12,7 @@ class SyncGoogleMerchantApiCommand extends Command
         {--dry-run : Build payloads but do not call Google}
         {--no-feed : Do not rewrite public/feeds/google-shopping.xml}';
 
-    protected $description = 'Push the CH catalog to Google Merchant Center via Merchant API.';
+    protected $description = 'Push the DE catalog to Google Merchant Center via Merchant API.';
 
     public function handle(MerchantApiClient $client, MerchantProductSync $sync): int
     {
@@ -22,8 +22,8 @@ class SyncGoogleMerchantApiCommand extends Command
             return self::FAILURE;
         }
 
-        if ((string) config('merchant.target_country') !== 'CH') {
-            $this->error('Refusing sync: MERCHANT_TARGET_COUNTRY must be CH.');
+        if ((string) config('merchant.target_country') !== 'DE') {
+            $this->error('Refusing sync: MERCHANT_TARGET_COUNTRY must be DE.');
 
             return self::FAILURE;
         }
@@ -61,7 +61,7 @@ class SyncGoogleMerchantApiCommand extends Command
             return self::FAILURE;
         }
 
-        $this->info('Syncing products to Merchant Center (CH)…');
+        $this->info('Syncing products to Merchant Center (DE)…');
         $result = $sync->sync(writeFeed: ! $this->option('no-feed'));
 
         $this->info(sprintf(

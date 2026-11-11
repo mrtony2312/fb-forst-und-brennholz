@@ -17,17 +17,17 @@ class HomeController extends Controller
         $catImages = [];
         foreach ($categories as $cat) {
             if (is_file(public_path("media/site/cat-{$cat->slug}.jpg"))) {
-                $catImages[$cat->slug] = asset("media/site/cat-{$cat->slug}.jpg");
+                $catImages[$cat->slug] = '/media/site/cat-'.$cat->slug.'.jpg';
             } else {
                 $catImages[$cat->slug] = optional(optional($cat->products->first())->images->first())->url
-                    ?? asset('assets/images/item/item-bg.jpg');
+                    ?? '/assets/images/item/item-bg.jpg';
             }
         }
 
         $heroImages = [];
         foreach (['hero-1', 'hero-2', 'hero-3', 'cta-1'] as $name) {
             $heroImages[$name] = is_file(public_path("media/site/{$name}.jpg"))
-                ? asset("media/site/{$name}.jpg")
+                ? '/media/site/'.$name.'.jpg'
                 : null;
         }
 

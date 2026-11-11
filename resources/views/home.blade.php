@@ -1,7 +1,7 @@
 @extends('layouts.omniva')
 
 @section('title', 'Brennholz, Holzpellets & Kaminholz')
-@section('meta_description', 'Heri Brennholz GmbH in Biberist: Brennholz, Pellets und Briketts – Preise inkl. MWST, kostenlose Lieferung in der ganzen Schweiz, transparentes Impressum und Kundenservice.')
+@section('meta_description', 'F & B Forst und Brennholz GmbH: Brennholz, Pellets und Briketts – Preise inkl. MwSt, kostenlose Lieferung nach Deutschland, transparentes Impressum und Kundenservice.')
 
 @push('styles')
 <style>
@@ -62,7 +62,7 @@
                         <div class="tf-hero-banner">
                             <div class="hero-image overflow-hidden">
                                 <img class="tf-animate-zoom-in-out" fetchpriority="high"
-                                    src="{{ $slide['img'] ?? '/assets/images/slider/skincare/slider-1.jpg' }}" alt="Heri Brennholz">
+                                    src="{{ $slide['img'] ?? '/assets/images/slider/skincare/slider-1.jpg' }}" alt="{{ config('app.name') }}">
                             </div>
                             <div class="hero-banner_wrap">
                                 <div class="container">
@@ -145,7 +145,7 @@
                     <span class="icon"><i class="icon-Package"></i></span>
                     <div class="content">
                         <p class="title h5">Palettenlieferung</p>
-                        <p class="text-caption cl-text-2">Kostenlose Lieferung in der Schweiz in 1 bis 2 Werktagen.</p>
+                        <p class="text-caption cl-text-2">Kostenlose Lieferung nach Deutschland in 2 bis 5 Werktagen.</p>
                     </div>
                 </div>
                 <div class="box-icon_V01 text-center">
@@ -171,7 +171,7 @@
         <div class="container">
             <div class="position-relative rounded-16 overflow-hidden" style="min-height:340px;display:flex;align-items:center;">
                 <img loading="lazy" src="{{ $heroImages['cta-1'] ?? $heroImages['hero-1'] ?? '/assets/images/section/banner-hero.jpg' }}"
-                    alt="Heri Brennholz" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                    alt="{{ config('app.name') }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
                 <span style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,14,10,.75),rgba(20,14,10,.25));"></span>
                 <div class="position-relative p-4 p-lg-5" style="max-width:560px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45);">
                     <h3 class="font-instrument_serif mb-10" style="color:#fff;">Brennholz und Pellets für die Heizsaison</h3>
@@ -196,7 +196,7 @@
                         <input type="email" name="email" class="text-caption" placeholder="Ihre E-Mail-Adresse" required>
                         <button type="submit" class="btn-action_submit tf-btn animate-btn"><i class="icon icon-ArrowRight"></i></button>
                     </fieldset>
-                    <label class="text-caption d-flex gap-2 text-start mt-2"><input type="checkbox" name="newsletter_consent" value="1" required> <span>Ich möchte Angebote per E-Mail erhalten und habe die <a href="/datenschutz" class="text-decoration-underline">Datenschutzerklärung</a> gelesen. Abmeldung jederzeit per E-Mail an kontakt@heribrennholzgmbh.com.</span></label>
+                    <label class="text-caption d-flex gap-2 text-start mt-2"><input type="checkbox" name="newsletter_consent" value="1" required> <span>Ich möchte Angebote per E-Mail erhalten und habe die <a href="/datenschutz" class="text-decoration-underline">Datenschutzerklärung</a> gelesen. Abmeldung jederzeit per E-Mail an info@fbforstundbrennholzgmbh.com.</span></label>
                 </form>
             </div>
         </div>

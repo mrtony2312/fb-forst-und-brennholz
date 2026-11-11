@@ -1,4 +1,4 @@
-@php $brand = config('app.name', 'Heri Brennholz'); @endphp
+@php $brand = config('app.name', 'F & B Forst und Brennholz'); @endphp
 @component('emails.layout', ['subject' => 'Bestellbestätigung ' . $order->reference, 'preheader' => 'Wir haben Ihre Bestellung ' . $order->reference . ' erhalten.'])
 
 <h1 style="margin:0 0 6px;font-size:22px;">Vielen Dank für Ihre Bestellung!</h1>
@@ -54,7 +54,7 @@
 </table>
 
 <p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#8a8178;">
-  Lieferung in 1 bis 2 Werktagen, kostenlos in der ganzen Schweiz.
+  Lieferung in 2 bis 5 Werktagen, kostenlos nach Deutschland.
   Bei Fragen antworten Sie einfach auf diese E-Mail oder nennen Sie uns Ihre Bestellnummer {{ $order->reference }}.
 </p>
 

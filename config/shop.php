@@ -2,38 +2,50 @@
 
 return [
 
-    // Schweizer Mehrwertsteuer-Normalsatz (seit 1.1.2024: 8.1 %). Brennholz, Pellets, Briketts
-    // und Öfen unterliegen dem Normalsatz. Alle Shop-Preise sind Bruttopreise (inkl. MWST).
-    'vat_rate' => (float) env('SHOP_VAT_RATE', 8.1),
+    // German VAT standard rate (MwSt). Catalog prices are gross (brutto, inkl. MwSt).
+    'vat_rate' => (float) env('SHOP_VAT_RATE', 19.0),
+    'vat_label' => 'MwSt',
 
-    // Lieferung CH — muss mit config/merchant.php shipping und Cart::shipping() übereinstimmen.
+    // ISO 4217 — must match Merchant feed + JSON-LD + checkout.
+    'currency' => strtoupper((string) env('MERCHANT_CURRENCY', env('SHOP_CURRENCY', 'EUR'))),
+
+    /*
+     | Legacy one-shot FX marker (catalog already stored in EUR).
+     | Kept for migration tooling only — not shown on the storefront.
+     */
+    'fx' => [
+        'from' => 'EUR',
+        'to' => 'EUR',
+        'rate' => (float) env('SHOP_FX_CHF_EUR', 1.093),
+        'as_of' => '2026-11-09',
+    ],
+
+    // Lieferung DE — muss mit config/merchant.php shipping und Cart::shipping() übereinstimmen.
     'shipping' => [
-        'country' => 'CH',
+        'country' => 'DE',
         'free' => true,
         'price' => 0.0,
-        'min_days' => (int) env('MERCHANT_SHIPPING_MIN_DAYS', 1),
-        'max_days' => (int) env('MERCHANT_SHIPPING_MAX_DAYS', 2),
-        'label' => 'Kostenlose Lieferung in der ganzen Schweiz',
+        'min_days' => (int) env('MERCHANT_SHIPPING_MIN_DAYS', 2),
+        'max_days' => (int) env('MERCHANT_SHIPPING_MAX_DAYS', 5),
+        'label' => 'Kostenlose Lieferung nach Deutschland',
     ],
 
     // Zahlungsarten. NUR aktivieren, was tatsächlich abgewickelt werden kann.
-    // TWINT, Kreditkarte und PostFinance setzen einen Vertrag mit einem Zahlungsanbieter
-    // (PSP) und eine technische Anbindung voraus – erst dann auf true setzen.
     'payment_methods' => [
         'rechnung' => [
-            'label' => 'Kauf auf Rechnung (QR-Rechnung)',
+            'label' => 'Kauf auf Rechnung',
             'enabled' => true,
-            'hint' => 'Sie erhalten die QR-Rechnung per E-Mail. Zahlbar innert 10 Tagen.',
+            'hint' => 'Sie erhalten die Rechnung per E-Mail. Zahlbar innert 10 Tagen.',
         ],
         'vorkasse' => [
-            'label' => 'Vorkasse (Banküberweisung)',
+            'label' => 'Vorkasse (SEPA-Überweisung)',
             'enabled' => true,
             'hint' => 'Wir senden Ihnen die Zahlungsdaten per E-Mail. Versand nach Zahlungseingang.',
         ],
         'twint' => [
             'label' => 'TWINT',
-            'enabled' => (bool) env('SHOP_PAY_TWINT', false),
-            'hint' => 'Zahlung per TWINT nach Bestellbestätigung.',
+            'enabled' => false,
+            'hint' => '',
         ],
         'karte' => [
             'label' => 'Kreditkarte (Visa, Mastercard)',
@@ -42,13 +54,13 @@ return [
         ],
         'postfinance' => [
             'label' => 'PostFinance',
-            'enabled' => (bool) env('SHOP_PAY_POSTFINANCE', false),
-            'hint' => 'Zahlung via PostFinance.',
+            'enabled' => false,
+            'hint' => '',
         ],
     ],
 
     'checkout' => [
-        'only_switzerland' => true,
+        'only_germany' => true,
         'require_phone' => true,
         'company_visible' => true,
     ],

@@ -31,24 +31,22 @@ class GoogleFeedTest extends TestCase
 
         $this->assertStringContainsString('<g:id>'.$product->id.'</g:id>', $xml);
         $this->assertStringContainsString('<g:title>', $xml);
-        $this->assertStringContainsString('<g:price>49.50 CHF</g:price>', $xml);
+        $this->assertStringContainsString('<g:price>49.50 EUR</g:price>', $xml);
         $this->assertStringContainsString('<g:availability>in_stock</g:availability>', $xml);
         $this->assertStringContainsString('<g:condition>new</g:condition>', $xml);
         $this->assertStringContainsString('<g:brand>', $xml);
         $this->assertStringContainsString('<g:mpn>', $xml);
-        $this->assertStringContainsString('g:country>CH</g:country>', $xml);
+        $this->assertStringContainsString('g:country>DE</g:country>', $xml);
         $this->assertStringContainsString('Standardversand', $xml);
         $this->assertStringContainsString('min_handling_time', $xml);
         $this->assertStringContainsString('max_handling_time', $xml);
         $this->assertStringNotContainsString('min_transit_time', $xml);
-        $this->assertStringNotContainsString('g:country>DE</g:country>', $xml);
+        $this->assertStringNotContainsString('g:country>CH</g:country>', $xml);
         $this->assertStringNotContainsString('Liechtenstein', $xml);
-        $this->assertStringNotContainsString('Deutschland', $xml);
-        $this->assertStringNotContainsString('Germany', $xml);
         $this->assertStringContainsString('<g:min_handling_time>', $xml);
         $this->assertStringContainsString('<g:max_handling_time>', $xml);
-        $this->assertStringContainsString('<g:country>CH</g:country>', $xml);
-        $this->assertMatchesRegularExpression('/<g:price>0\.00 CHF<\/g:price>/', $xml);
+        $this->assertStringContainsString('<g:country>DE</g:country>', $xml);
+        $this->assertMatchesRegularExpression('/<g:price>0\.00 EUR<\/g:price>/', $xml);
     }
 
     public function test_pdp_json_ld_matches_feed_price(): void
@@ -68,17 +66,16 @@ class GoogleFeedTest extends TestCase
         $pdp = $this->get(route('product.show', $product));
         $pdp->assertOk();
         $pdp->assertSee('data-gmc-price="49.50"', false);
-        $pdp->assertSee('Schweiz', false);
-        $pdp->assertSee('CHF 0.00', false);
-        $pdp->assertSee('Heri Brennholz GmbH', false);
+        $pdp->assertSee('Deutschland', false);
+        $pdp->assertSee('EUR 0,00', false);
+        $pdp->assertSee('F & B Forst und Brennholz GmbH', false);
         $pdp->assertDontSee('wird bei der Bestellung berechnet', false);
-        $pdp->assertDontSee('Deutschland', false);
 
         $this->assertStringContainsString('"price":"49.50"', $pdp->getContent());
-        $this->assertStringContainsString('"priceCurrency":"CHF"', $pdp->getContent());
+        $this->assertStringContainsString('"priceCurrency":"EUR"', $pdp->getContent());
 
         $feed = $this->get(route('feed.google'))->getContent();
-        $this->assertStringContainsString('<g:price>49.50 CHF</g:price>', $feed);
+        $this->assertStringContainsString('<g:price>49.50 EUR</g:price>', $feed);
     }
 
     public function test_legal_pages_are_public(): void
@@ -87,13 +84,13 @@ class GoogleFeedTest extends TestCase
             $this->get($path)->assertOk();
         }
         $this->get('/versand')
-            ->assertSee('Schweiz', false)
+            ->assertSee('Deutschland', false)
             ->assertSee('kostenlos', false)
-            ->assertDontSee('Deutschland', false);
+            ->assertDontSee('ausschliesslich innerhalb der Schweiz', false);
         $this->get('/impressum')
             ->assertOk()
-            ->assertSee('CHE-228.719.493', false)
-            ->assertSee('Heri Brennholz GmbH', false);
+            ->assertSee('HRB 40744', false)
+            ->assertSee('F & B Forst und Brennholz GmbH', false);
         $this->get('/kasse')->assertRedirect();
     }
 }

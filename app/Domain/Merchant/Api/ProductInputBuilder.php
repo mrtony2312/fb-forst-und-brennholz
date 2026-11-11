@@ -6,7 +6,7 @@ use App\Domain\Merchant\Support\Availability;
 use App\DTO\Merchant\GoogleProductData;
 
 /**
- * Maps feed DTO → Merchant API ProductInput JSON body (CH market).
+ * Maps feed DTO → Merchant API ProductInput JSON body (DE market).
  *
  * @see https://developers.google.com/merchant/api/reference/rest/products_v1/ProductAttributes
  */
@@ -59,7 +59,6 @@ class ProductInputBuilder
             $attributes['productTypes'] = [$item->productType];
         }
 
-        
         $unitMeasure = $this->parseMeasure($item->unitPricingMeasure);
         $unitBase = $this->parseBaseMeasure($item->unitPricingBaseMeasure);
         if ($unitMeasure && $unitBase) {
@@ -78,10 +77,10 @@ class ProductInputBuilder
 
         $currency = $item->currency !== ''
             ? $item->currency
-            : (string) config('merchant.currency', 'CHF');
+            : shop_currency();
 
         $attributes['shipping'] = [[
-            'country' => (string) config('merchant.shipping.country', 'CH'),
+            'country' => (string) config('merchant.shipping.country', 'DE'),
             'service' => (string) config('merchant.shipping.service', config('feed.shipping_service')),
             'price' => $this->money((float) config('merchant.shipping.price', 0), $currency),
             'minHandlingTime' => (string) (int) config('merchant.shipping.handling_min', 0),
@@ -93,7 +92,7 @@ class ProductInputBuilder
         return [
             'offerId' => $item->id,
             'contentLanguage' => (string) config('merchant.content_language', 'de'),
-            'feedLabel' => (string) config('merchant.feed_label', 'CH'),
+            'feedLabel' => (string) config('merchant.feed_label', 'DE'),
             'productAttributes' => $attributes,
         ];
     }
@@ -116,7 +115,7 @@ class ProductInputBuilder
      */
     private function price(string $googlePrice): array
     {
-        // "29.99 CHF"
+        // "29.99 EUR"
         if (! preg_match('/^(\d+(?:\.\d{1,2})?)\s+([A-Z]{3})$/', trim($googlePrice), $m)) {
             throw new \InvalidArgumentException('Invalid Google price format: '.$googlePrice);
         }

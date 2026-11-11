@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class ProductFeedTsv
 {
     /**
-     * Tab-delimited Google Merchant feed headers (CH / de / CHF).
+     * Tab-delimited Google Merchant feed headers (DE / de / EUR).
      * Only recognized product-data-spec attribute names.
      *
      * @see https://support.google.com/merchants/answer/7052112
@@ -42,9 +42,7 @@ class ProductFeedTsv
         'shipping(country:service:price)',
     ];
 
-    public function __construct(private readonly GoogleProductMapper $mapper)
-    {
-    }
+    public function __construct(private readonly GoogleProductMapper $mapper) {}
 
     public function toTsv(): string
     {
@@ -105,7 +103,11 @@ class ProductFeedTsv
                         ),
                         $dto->currency
                     );
-                    $shipping = sprintf('CH:%s:%s', $service !== '' ? $service : 'Standardversand', $shipPrice);
+                    $shipCountry = strtoupper((string) config(
+                        'merchant.shipping.country',
+                        config('feed.shipping_country', 'DE')
+                    ));
+                    $shipping = sprintf('%s:%s:%s', $shipCountry !== '' ? $shipCountry : 'DE', $service !== '' ? $service : 'Standardversand', $shipPrice);
 
                     $fields = [
                         $dto->id,

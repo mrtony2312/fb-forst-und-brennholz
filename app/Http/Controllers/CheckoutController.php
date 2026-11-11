@@ -6,6 +6,7 @@ use App\Mail\NewOrderNotificationMail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Services\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,8 +67,8 @@ class CheckoutController extends Controller
             'phone.required' => 'Bitte geben Sie eine Telefonnummer für die Lieferkoordination an.',
         ]);
 
-        // Shop delivers only within Switzerland — never trust a foreign country code.
-        $data['country'] = 'CH';
+        // Shop delivers only to Germany — never trust a foreign country code from the client.
+        $data['country'] = 'DE';
         $data['phone'] = trim((string) $data['phone']);
         $data['company'] = isset($data['company']) ? trim((string) $data['company']) : null;
         $data['address_2'] = isset($data['address_2']) ? trim((string) $data['address_2']) : null;
@@ -86,24 +87,23 @@ class CheckoutController extends Controller
                 'address_2' => $data['address_2'] ?: null,
                 'postcode' => $data['postcode'],
                 'city' => $data['city'],
-                'country' => 'CH',
+                'country' => 'DE',
                 'notes' => $data['notes'] ?: null,
                 'payment_method' => $data['payment_method'],
                 'subtotal' => $this->cart->subtotal(),
                 'shipping' => $this->cart->shipping(),
                 'total' => $this->cart->total(),
-                'currency' => 'CHF',
+                'currency' => shop_currency(),
             ]);
 
             foreach ($items as $item) {
-                /** @var \App\Models\Product $product */
+                /** @var Product $product */
                 $product = $item['product'];
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'sku' => $product->sku,
                     'name' => $product->name,
-                    'unit_price' => $product->price,
+                    'price' => $product->price,
                     'quantity' => $item['quantity'],
                     'line_total' => $item['line_total'],
                 ]);

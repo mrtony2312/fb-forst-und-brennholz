@@ -1,13 +1,13 @@
-# Heri Brennholz — Boutique en ligne
+# F & B Forst und Brennholz — Boutique en ligne
 
-Boutique e-commerce Laravel pour **Heri Brennholz GmbH**, producteur et vendeur de bois de chauffage (Brennholz), granulés de bois (Pellets), briquettes et bois densifié, basé à Biberist (Soleure, Suisse).
+Boutique e-commerce Laravel pour **F & B Forst und Brennholz GmbH**, vendeur de bois de chauffage (Brennholz), granulés de bois (Pellets), briquettes et bois densifié, basé à Hohenfels (Bavière, Allemagne).
 
-Le site propose la vente en ligne de combustibles bois avec livraison **gratuite en Suisse en 1 à 2 jours ouvrés**.
+Le site propose la vente en ligne de combustibles bois avec livraison **gratuite en Allemagne en 2 à 5 jours ouvrés**.
 
 ## Stack technique
 
-- **Backend** : Laravel 13 (PHP 8.3+)
-- **Frontend** : Blade + Tailwind CSS 4, Vite
+- **Backend** : Laravel 13 (PHP 8.4+)
+- **Frontend** : Blade + Tailwind CSS, Vite
 - **Base de données** : MySQL/MariaDB (Eloquent ORM)
 
 ## Structure fonctionnelle
@@ -43,26 +43,27 @@ php artisan serve
 
 ## Informations légales de l'entreprise
 
-- **Raison sociale** : Heri Brennholz GmbH
-- **Adresse** : Fiderholzstrasse 7, 4562 Biberist, Suisse
-- **UID/IDE** : CHE-228.719.493
-- **N° registre du commerce** : CH-241.4.020.905-9
-- Ces informations sont affichées sur les pages `/impressum`, `/agb` et `/datenschutz`, et doivent être tenues à jour en cas de changement (adresse, dirigeants, forme juridique).
+- **Raison sociale** : F & B Forst und Brennholz GmbH
+- **Adresse** : Dekan-Schnitter-Straße 4, 92366 Hohenfels, Allemagne
+- **Registergericht** : Amtsgericht Nürnberg
+- **N° registre** : HRB 40744
+- **Capital** : 25 100 €
+- Ces informations sont affichées sur les pages `/impressum`, `/agb` et `/datenschutz`, et doivent être tenues à jour en cas de changement (adresse, dirigeants, forme juridique, USt-IdNr.).
 
-## Politique de livraison (marché CH uniquement)
+## Politique de livraison (marché DE)
 
-- Livraison **gratuite dans toute la Suisse**, sans montant minimum (`App\Services\Cart::shipping()` = `0.0`).
-- **Pas de livraison vers l'Allemagne / l'UE** : le checkout force le pays `CH`.
-- Délai annoncé storefront + GMC : **1 à 2 jours ouvrés** (`config/merchant.php` → `min_days` / `max_days`, affiché via `shipping_summary()`).
+- Livraison **gratuite en Allemagne**, sans montant minimum (`App\Services\Cart::shipping()` = `0.0`).
+- Checkout force le pays `DE` (vendeur NAP = GmbH allemande F & B).
+- Délai annoncé storefront + GMC : **2 à 5 jours ouvrés** (`config/merchant.php` → `min_days` / `max_days`, affiché via `shipping_summary()`).
 - Handling feed GMC : `handling_min` / `handling_max` dans `config/merchant.php` (source de vérité pour le feed XML/TSV).
-- Prix catalogue **TTC** (MWST CH 8.1 %).
+- Prix catalogue **TTC en EUR** (MwSt DE 19 %).
 
 Toute modification doit être répercutée **simultanément** dans :
 `config/merchant.php`, `config/shop.php`, `config/feed.php`, `App\Services\Cart`, pages `/versand`, `/agb`, `/faq`, `/rueckgabe`, bannière `layouts/omniva.blade.php`, feed Merchant et JSON-LD produit.
 
 ## Conformité Google Merchant Center
 
-- Marché feed : **CH / de / CHF**, livraison gratuite `0.00 CHF`.
+- Marché feed : **DE / de / EUR**, livraison gratuite `0.00 EUR`.
 - Pages politiques crawlables : `/impressum`, `/versand`, `/rueckgabe`, `/agb`, `/datenschutz`, `/kontakt`.
-- Feeds : `/feeds/google-merchant-ch.xml` (+ TSV), jobs de refresh/sync.
+- Feeds : `/feeds/google-merchant-de.xml` (+ TSV), jobs de refresh/sync.
 - JSON-LD produit sur la fiche (`GoogleProductData::toJsonLd()`).

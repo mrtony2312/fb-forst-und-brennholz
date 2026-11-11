@@ -1,15 +1,17 @@
 @extends('layouts.omniva')
 
-@section('title', $product->name)
-@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($product->short_description ?: $product->description), 150))
-
 @php
+    $safeShort = \App\Domain\Merchant\Support\DescriptionSanitizer::html($product->short_description);
+    $safeDescription = \App\Domain\Merchant\Support\DescriptionSanitizer::html($product->description);
     $primaryCat = $product->categories->first();
     $gallery = $product->images->isNotEmpty()
         ? $product->images
-        : collect([(object) ['url' => asset('assets/images/item/item-bg.jpg'), 'alt' => $product->name]]);
+        : collect([(object) ['url' => '/assets/images/item/item-bg.jpg', 'alt' => $product->name]]);
     $hasPromo = gmc_product_on_promo($product);
 @endphp
+
+@section('title', $product->name)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($safeShort ?: $safeDescription), 150))
 
 @section('content')
     {{-- ===== Page Title ===== --}}
@@ -66,9 +68,9 @@
                                 @endif
                                 <h1 class="product-infor-name h3">{{ $product->name }}</h1>
                                 <div class="product-infor-price">
-                                    <span class="price-on-sale h4 text-primary" data-gmc-price="{{ number_format((float) $product->price, 2, '.', '') }}">{{ swiss_money((float) $product->price) }}</span>
+                                    <span class="price-on-sale h4 text-primary" data-gmc-price="{{ number_format((float) $product->price, 2, '.', '') }}">{{ shop_money((float) $product->price) }}</span>
                                     @if ($hasPromo)
-                                        <span class="price-on-old cl-text-main fw-medium text-decoration-line-through">{{ swiss_money((float) $product->regular_price) }}</span>
+                                        <span class="price-on-old cl-text-main fw-medium text-decoration-line-through">{{ shop_money((float) $product->regular_price) }}</span>
                                         <span class="badge-sale text-extra-small fw-medium style-fill">
                                             -{{ (int) round(100 - ($product->price / max((float) $product->regular_price, 0.01) * 100)) }} %
                                         </span>
@@ -77,7 +79,7 @@
                                 @if ($product->formatted_grundpreis)
                                     <div class="product-infor-grundpreis text-caption cl-text-main">{{ $product->formatted_grundpreis }}</div>
                                 @endif
-                                <div class="text-caption cl-text-main">Preis in CHF inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MWST</div>
+                                <div class="text-caption cl-text-main">Preis in {{ shop_currency() }} inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MwSt</div>
                                 <div class="tf-product-shipping cl-text-main">
                                     {{ shipping_summary() }}
                                     <a href="{{ route('pages.versand') }}" class="text-decoration-underline link">Versandbedingungen</a>
@@ -90,9 +92,9 @@
                                         <span class="text-caption ms-1">{{ $product->stock_availability }}</span>
                                     @endif
                                 </p>
-                                @if ($product->short_description)
+                                @if ($safeShort !== '')
                                     <div class="tf-product-description cl-text-7 letter-space--2">
-                                        {!! strip_tags($product->short_description, '<p><br><ul><ol><li><strong><em>') !!}
+                                        {!! $safeShort !!}
                                     </div>
                                 @endif
                             </div>
@@ -144,7 +146,7 @@
                                             <circle cx="17.5" cy="18" r="1.8" fill="#fff" stroke="#1c1c1c" stroke-width="1.6"/>
                                         </svg>
                                     </span>
-                                    <span style="min-width:0;"><strong class="d-block" style="color:#3cb54a;font-style:italic;font-size:17px;">Lieferung Schweiz</strong><span style="color:#1c1c1c;font-size:14px;line-height:1.3;">Schnelle &amp; sichere Lieferung in der ganzen Schweiz</span></span>
+                                    <span style="min-width:0;"><strong class="d-block" style="color:#3cb54a;font-style:italic;font-size:17px;">Lieferung Deutschland</strong><span style="color:#1c1c1c;font-size:14px;line-height:1.3;">Schnelle &amp; sichere Lieferung nach Deutschland</span></span>
                                 </div>
                             </div>
 
@@ -153,7 +155,7 @@
                                     <i class="icon icon-Truck cl-text-main"></i>
                                     <p class="text-caption mb-0">
                                         <strong>{{ shipping_summary() }}</strong>
-                                        · Versand CHF 0.00
+                                        · Versand {{ shop_money(0) }}
                                         · <a href="{{ route('pages.versand') }}">Details</a>
                                         · <a href="{{ route('pages.rueckgabe') }}">Rückgabe {{ (int) config('merchant.returns.days', 14) }} Tage</a>
                                     </p>
@@ -162,7 +164,7 @@
                                 <div class="product-delivery">
                                     <i class="icon icon-Box2 cl-text-main"></i>
                                     <p class="text-caption">
-                                        <span class="cl-text-main">Kostenlose Lieferung</span> in der ganzen Schweiz
+                                        <span class="cl-text-main">Kostenlose Lieferung</span> nach Deutschland
                                     </p>
                                 </div>
                             </div>
@@ -175,10 +177,10 @@
                                     </div>
                                     <div id="faq-desc" class="collapse show" data-bs-parent="#prdDes">
                                         <div class="accordion-content d-grid gap-14">
-                                            @if ($product->description)
-                                                {!! $product->description !!}
+                                            @if ($safeDescription !== '')
+                                                {!! $safeDescription !!}
                                             @else
-                                                <p class="text-caption">{{ $product->short_description ? strip_tags($product->short_description) : 'Von Heri Brennholz ausgewählter Holzbrennstoff.' }}</p>
+                                                <p class="text-caption">{{ $safeShort !== '' ? strip_tags($safeShort) : 'Von F & B Forst und Brennholz ausgewählter Holzbrennstoff.' }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -210,7 +212,7 @@
                                         <div class="accordion-content d-grid gap-14">
                                             <ul class="list text-caption">
                                                 <li><span class="br-dot"></span> {{ shipping_summary() }}.</li>
-                                                <li><span class="br-dot"></span> Versandkosten CHF 0.00 – ohne Mindestbestellwert, nur Schweiz.</li>
+                                                <li><span class="br-dot"></span> Versandkosten {{ shop_money(0) }} – ohne Mindestbestellwert, nur Deutschland.</li>
                                                 <li><span class="br-dot"></span> {{ return_summary() }} – <a href="{{ route('pages.rueckgabe') }}">Rückgaberichtlinie</a>.</li>
                                                 <li><span class="br-dot"></span> Verkäufer: {{ company_nap()['legal_name'] }} · <a href="{{ route('pages.impressum') }}">Impressum</a>.</li>
                                             </ul>
@@ -244,7 +246,7 @@
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <div class="tf-sticky-atc-variant-price">
-                            <span class="h6">{{ swiss_money((float) $product->price) }}</span>
+                            <span class="h6">{{ shop_money((float) $product->price) }}</span>
                         </div>
                         <div class="tf-product-info-quantity">
                             <div class="wg-quantity py-2">

@@ -16,11 +16,12 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class);
     }
 
-    /** Public web URL for the stored asset file. */
+    /** Public web URL for the stored asset file (root-relative so local hosts always match). */
     public function getUrlAttribute(): string
     {
-        // stored as "assets/images/<cat>/<slug>/01.jpg" -> served via /media symlink
-        $rel = preg_replace('#^assets/images/#', '', $this->path);
-        return asset('media/' . ltrim($rel, '/'));
+        // stored as "assets/images/<cat>/<slug>/01.jpg" -> served from public/media/...
+        $rel = preg_replace('#^assets/images/#', '', (string) $this->path);
+
+        return '/media/'.ltrim($rel, '/');
     }
 }

@@ -7,7 +7,7 @@
 <div class="card-product">
     <div class="card-product_wrapper">
         <a href="{{ route('product.show', $product) }}" class="product-img">
-            <img class="img-product" loading="lazy" src="{{ $img?->url ?? asset('assets/images/item/item-bg.jpg') }}" alt="{{ $product->name }}">
+            <img class="img-product" loading="lazy" src="{{ $img?->url ?? '/assets/images/item/item-bg.jpg' }}" alt="{{ $product->name }}">
             @if ($hover)
                 <img class="img-hover" loading="lazy" src="{{ $hover->url }}" alt="{{ $product->name }}">
             @endif
@@ -56,9 +56,9 @@
         <a href="{{ route('product.show', $product) }}" class="name-product fw-medium link-underline">{{ $product->name }}</a>
         <div class="price-wrap h6">
             @if ($hasPromo)
-                <span class="price-old text-decoration-line-through opacity-50 me-1">{{ swiss_money((float) $product->regular_price) }}</span>
+                <span class="price-old text-decoration-line-through opacity-50 me-1">{{ shop_money((float) $product->regular_price) }}</span>
             @endif
-            <span class="price-new fw-medium">{{ swiss_money((float) $product->price) }}</span>
+            <span class="price-new fw-medium">{{ shop_money((float) $product->price) }}</span>
         </div>
     </div>
 </div>

@@ -19,7 +19,7 @@
             @if (request()->boolean('in_stock'))<span class="shop-chip">Auf Lager <a href="#" data-uncheck="in_stock">&times;</a></span>@endif
             @if (request()->boolean('on_sale'))<span class="shop-chip">Im Angebot <a href="#" data-uncheck="on_sale">&times;</a></span>@endif
             @if (request()->filled('min') || request()->filled('max'))
-                <span class="shop-chip">Preis {{ request('min', 0) }}–{{ request('max', $priceBounds['max']) }} CHF <a href="#" data-clearprice="1">&times;</a></span>
+                                                <span class="shop-chip">Preis {{ request('min', 0) }}–{{ request('max', $priceBounds['max']) }} {{ shop_currency() }} <a href="#" data-clearprice="1">&times;</a></span>
             @endif
             <a href="{{ route('shop.index') }}" class="text-caption text-decoration-underline ms-1 js-reset-filters">Alle entfernen</a>
         </div>

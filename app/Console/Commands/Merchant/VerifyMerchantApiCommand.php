@@ -10,7 +10,7 @@ class VerifyMerchantApiCommand extends Command
 {
     protected $signature = 'merchant:api-status';
 
-    protected $description = 'Validate Merchant API OAuth / service-account credentials and account access (CH).';
+    protected $description = 'Validate Merchant API OAuth / service-account credentials and account access (DE).';
 
     public function handle(MerchantApiClient $client): int
     {
@@ -36,8 +36,8 @@ class VerifyMerchantApiCommand extends Command
             ]
         );
 
-        if ((string) config('merchant.target_country') !== 'CH') {
-            $this->error('MERCHANT_TARGET_COUNTRY must be CH for this storefront (misrepresentation risk).');
+        if ((string) config('merchant.target_country') !== 'DE') {
+            $this->error('MERCHANT_TARGET_COUNTRY must be DE for this storefront (misrepresentation risk).');
 
             return self::FAILURE;
         }

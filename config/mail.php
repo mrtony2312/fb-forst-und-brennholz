@@ -111,8 +111,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
+        'address' => env('MAIL_FROM_ADDRESS', 'info@fbforstundbrennholzgmbh.com'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'F & B Forst und Brennholz')),
     ],
 
     /*
@@ -125,8 +125,8 @@ return [
     */
 
     'admin' => [
-        'address' => env('MAIL_ADMIN_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
-        'name' => env('MAIL_ADMIN_NAME', 'Bestellannahme'),
+        'address' => env('MAIL_ADMIN_ADDRESS', env('MAIL_FROM_ADDRESS', 'info@fbforstundbrennholzgmbh.com')),
+        'name' => env('MAIL_ADMIN_NAME', 'F & B Forst und Brennholz — Bestellannahme'),
     ],
 
 ];

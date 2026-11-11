@@ -5,7 +5,7 @@ namespace App\Domain\Merchant\Support;
 use App\Models\Product;
 
 /**
- * Resolves unit_pricing_measure / unit_pricing_base_measure for CH (EFTA).
+ * Resolves unit_pricing_measure / unit_pricing_base_measure for DE Merchant feeds.
  *
  * @see https://support.google.com/merchants/answer/6324455
  * @see https://support.google.com/merchants/answer/6324490
@@ -95,7 +95,7 @@ class UnitPricingResolver
             }
         }
 
-        // Bags count without per-bag kg → derive from Grundpreis CHF/kg
+        // Bags count without per-bag kg → derive from Grundpreis EUR/kg
         if (preg_match('/(\d+)\s*(?:Säcke|Saecke|Sacks?|Bags?|sacs?)\b/iu', $text)
             && self::labelIsPerKg($product)
             && ($derived = self::deriveFromUnitPrice($product)) !== null
@@ -103,7 +103,7 @@ class UnitPricingResolver
             return $derived;
         }
 
-        // Derive from price ÷ price_per_unit when label is CHF/kg
+        // Derive from price ÷ price_per_unit when label is EUR/kg
         if (self::labelIsPerKg($product) && ($derived = self::deriveFromUnitPrice($product)) !== null) {
             return $derived;
         }

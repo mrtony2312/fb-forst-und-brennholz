@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
@@ -45,7 +46,7 @@ class Product extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        return swiss_money($this->price);
+        return shop_money($this->price);
     }
 
     public function getFormattedGrundpreisAttribute(): ?string
@@ -54,6 +55,8 @@ class Product extends Model
             return null;
         }
 
-        return 'Grundpreis: ' . number_format((float) $this->price_per_unit, 2, '.', "'") . ' ' . $this->price_per_unit_label;
+        $label = str_replace('CHF/', shop_currency().'/', (string) $this->price_per_unit_label);
+
+        return 'Grundpreis: '.number_format((float) $this->price_per_unit, 2, '.', "'").' '.$label;
     }
 }

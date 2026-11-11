@@ -70,11 +70,11 @@
                                     <tr class="cart-row" data-product-id="{{ $item['product']->id }}" data-price="{{ $item['product']->price }}">
                                         <td>
                                             <div class="cart-prod">
-                                                <img src="{{ $item['product']->primary_image?->url ?? asset('assets/images/item/item-bg.jpg') }}" alt="{{ $item['product']->name }}">
+                                                <img src="{{ $item['product']->primary_image?->url ?? '/assets/images/item/item-bg.jpg' }}" alt="{{ $item['product']->name }}">
                                                 <a href="{{ route('product.show', $item['product']) }}">{{ $item['product']->name }}</a>
                                             </div>
                                         </td>
-                                        <td>{{ swiss_money((float) $item['product']->price) }}</td>
+                                        <td>{{ shop_money((float) $item['product']->price) }}</td>
                                         <td>
                                             <div class="qty-stepper" data-min="1" data-max="99">
                                                 <button type="button" data-step="-1" aria-label="Weniger">&minus;</button>
@@ -82,7 +82,7 @@
                                                 <button type="button" data-step="1" aria-label="Mehr">&plus;</button>
                                             </div>
                                         </td>
-                                        <td class="text-end cart-line-total">{{ swiss_money($item['line_total']) }}</td>
+                                        <td class="text-end cart-line-total">{{ shop_money($item['line_total']) }}</td>
                                         <td class="text-end">
                                             <button type="button" class="cart-remove" aria-label="Entfernen">&times;</button>
                                         </td>
@@ -96,10 +96,10 @@
                     <div class="col-lg-4">
                         <div class="cart-summary">
                             <h6 class="mb-3">Zusammenfassung</h6>
-                            <div class="row-line"><span>Zwischensumme</span><span id="sumSubtotal">{{ swiss_money($cart->subtotal()) }}</span></div>
-                            <div class="row-line"><span>Versand</span><span id="sumShipping">{{ $cart->shipping() > 0 ? swiss_money($cart->shipping()) : 'Kostenlos' }}</span></div>
-                            <div class="row-total"><span>Gesamt</span><span id="sumTotal">{{ swiss_money($cart->total()) }}</span></div>
-                            <p class="hint">Alle Preise inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MWST.</p>
+                            <div class="row-line"><span>Zwischensumme</span><span id="sumSubtotal">{{ shop_money($cart->subtotal()) }}</span></div>
+                            <div class="row-line"><span>Versand</span><span id="sumShipping">{{ $cart->shipping() > 0 ? shop_money($cart->shipping()) : 'Kostenlos' }}</span></div>
+                            <div class="row-total"><span>Gesamt</span><span id="sumTotal">{{ shop_money($cart->total()) }}</span></div>
+                            <p class="hint">Alle Preise inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MwSt.</p>
                             <p class="hint">Zahlungsarten: {{ payment_methods_text() }}.</p>
                             <p class="hint" id="shipHint"></p>
                             <a href="{{ route('checkout.index') }}" class="tf-btn btn-fill animate-btn w-100 mt-3"><span>Zur Kasse</span></a>
@@ -121,8 +121,9 @@
     var updateUrl = root.dataset.updateUrl;
     var removeUrl = root.dataset.removeUrl;
 
+    var currencyCode = @json(shop_currency());
     function eur(n) {
-        return 'CHF ' + n.toLocaleString('de-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/’|’/g, "'");
+        return currencyCode + ' ' + n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function applySummary(data) {
@@ -133,7 +134,7 @@
 
         var hint = document.getElementById('shipHint');
         if (hint) {
-            hint.textContent = data.subtotal > 0 ? 'Versand kostenlos in der ganzen Schweiz.' : '';
+            hint.textContent = data.subtotal > 0 ? 'Versand kostenlos nach Deutschland.' : '';
         }
         if (data.empty) window.location.reload();
     }

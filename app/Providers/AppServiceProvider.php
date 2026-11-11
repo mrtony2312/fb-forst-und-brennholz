@@ -24,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-        if ($this->app->environment('production') || str_starts_with((string) config('app.url'), 'https://')) {
+        // Only force HTTPS when APP_URL itself is https — otherwise local http://127.0.0.1 breaks images/assets.
+        if (str_starts_with((string) config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
 

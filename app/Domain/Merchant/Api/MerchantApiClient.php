@@ -94,10 +94,10 @@ class MerchantApiClient
             'oauth_refresh' => filled(config('merchant.oauth.refresh_token')) ? 'set' : 'missing',
             'configured' => $this->isConfigured(),
             'ready_to_sync' => $this->isConfigured() && $this->dataSourceId !== '',
-            'target_country' => (string) config('merchant.target_country', 'CH'),
+            'target_country' => (string) config('merchant.target_country', 'DE'),
             'content_language' => (string) config('merchant.content_language', 'de'),
-            'feed_label' => (string) config('merchant.feed_label', 'CH'),
-            'currency' => (string) config('merchant.currency', 'CHF'),
+            'feed_label' => (string) config('merchant.feed_label', 'DE'),
+            'currency' => shop_currency(),
         ];
     }
 

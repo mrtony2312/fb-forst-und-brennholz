@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class WishlistController extends Controller
 {
-    public function __construct(private Wishlist $wishlist)
-    {
-    }
+    public function __construct(private Wishlist $wishlist) {}
 
     public function index()
     {
@@ -22,7 +20,7 @@ class WishlistController extends Controller
         $data = $request->validate(['product_id' => ['required', 'exists:products,id']]);
         $added = $this->wishlist->toggle((int) $data['product_id']);
         $name = Product::find($data['product_id'])->name;
-        $message = $added ? "$name ajouté aux favoris." : "$name retiré des favoris.";
+        $message = $added ? "$name wurde zur Merkliste hinzugefügt." : "$name wurde von der Merkliste entfernt.";
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -39,6 +37,6 @@ class WishlistController extends Controller
     {
         $this->wishlist->remove((int) $request->input('product_id'));
 
-        return back()->with('status', 'Article retiré des favoris.');
+        return back()->with('status', 'Artikel von der Merkliste entfernt.');
     }
 }

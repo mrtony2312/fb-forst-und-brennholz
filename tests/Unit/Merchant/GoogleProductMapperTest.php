@@ -27,7 +27,7 @@ class GoogleProductMapperTest extends TestCase
 
         $this->assertNotNull($dto);
         $this->assertSame((string) $product->id, $dto->id);
-        $this->assertSame('29.99 CHF', $dto->price);
+        $this->assertSame('29.99 EUR', $dto->price);
         $this->assertSame('in_stock', $dto->availability);
         $this->assertSame('SKU-1', $dto->mpn);
         $this->assertNull($dto->gtin);

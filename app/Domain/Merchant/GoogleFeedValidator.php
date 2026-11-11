@@ -60,11 +60,12 @@ class GoogleFeedValidator
                 $errors[] = 'image_link must be https absolute';
             }
         }
-        if ($dto->currency !== '' && strtoupper($dto->currency) !== 'CHF') {
-            $errors[] = 'currency must be CHF for CH feed';
+        $expectedCurrency = shop_currency();
+        if ($dto->currency !== '' && strtoupper($dto->currency) !== $expectedCurrency) {
+            $errors[] = 'currency must be '.$expectedCurrency;
         }
-        if ($dto->targetCountry !== '' && strtoupper($dto->targetCountry) !== 'CH') {
-            $errors[] = 'target_country must be CH';
+        if ($dto->targetCountry !== '' && strtoupper($dto->targetCountry) !== 'DE') {
+            $errors[] = 'target_country must be DE';
         }
         if ($dto->shippingWeight !== null && $dto->shippingWeight !== ''
             && ! preg_match('/^\d+(?:\.\d+)?\s?(kg|g|lb|oz)$/i', $dto->shippingWeight)) {

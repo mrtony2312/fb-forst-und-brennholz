@@ -1,4 +1,4 @@
-@php $brand = config('app.name', 'Heri Brennholz'); @endphp
+@php $brand = config('app.name', 'F & B Forst und Brennholz'); @endphp
 @component('emails.layout', ['subject' => 'Neue Bestellung ' . $order->reference, 'preheader' => 'Neue Bestellung über ' . $order->money($order->total) . ' von ' . $order->full_name])
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#1c140f;border-radius:10px;margin-bottom:22px;">

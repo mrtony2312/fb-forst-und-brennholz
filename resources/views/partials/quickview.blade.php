@@ -3,7 +3,7 @@
     <div class="col-md-6">
         <div class="p-3">
             <img id="qvMain-{{ $product->id }}"
-                 src="{{ $qvImgs->first()?->url ?? asset('assets/images/item/item-bg.jpg') }}"
+                 src="{{ $qvImgs->first()?->url ?? '/assets/images/item/item-bg.jpg' }}"
                  alt="{{ $product->name }}"
                  style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;background:#f6f2ec;">
             @if ($qvImgs->count() > 1)
@@ -25,9 +25,9 @@
             <h5 class="mb-2">{{ $product->name }}</h5>
             <div class="h6 mb-2">
                 @if ($product->on_sale && $product->regular_price > $product->price)
-                    <span class="text-decoration-line-through opacity-50 me-1">{{ swiss_money((float) $product->regular_price) }}</span>
+                    <span class="text-decoration-line-through opacity-50 me-1">{{ shop_money((float) $product->regular_price) }}</span>
                 @endif
-                <span class="fw-semibold">{{ swiss_money((float) $product->price) }}</span>
+                <span class="fw-semibold">{{ shop_money((float) $product->price) }}</span>
             </div>
             <p class="mb-3">
                 <span class="badge {{ $product->in_stock ? 'bg-success' : 'bg-secondary' }}">

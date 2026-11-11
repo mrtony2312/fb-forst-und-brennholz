@@ -14,8 +14,7 @@ class SafeFeedWriter
 {
     public function __construct(
         private readonly GoogleFeedGenerator $generator,
-    ) {
-    }
+    ) {}
 
     /**
      * Build XML and refuse empty / catastrophic drops vs the previous good file.
@@ -94,10 +93,14 @@ class SafeFeedWriter
     {
         $candidates = array_filter([
             $preferredPath ? $preferredPath.'.last-good' : null,
-            public_path('feeds/google-merchant-ch.xml.last-good'),
-            storage_path('app/feeds/google-merchant-ch.xml.last-good'),
-            public_path('feeds/google-merchant-ch.xml'),
-            storage_path('app/feeds/google-merchant-ch.xml'),
+            public_path('feeds/google-merchant-de.xml.last-good'),
+            storage_path('app/feeds/google-merchant-de.xml.last-good'),
+            public_path('feeds/google-merchant-de.xml'),
+            storage_path('app/feeds/google-merchant-de.xml'),
+            public_path('feeds/google-shopping.xml.last-good'),
+            storage_path('app/feeds/google-shopping.xml.last-good'),
+            public_path('feeds/google-shopping.xml'),
+            storage_path('app/feeds/google-shopping.xml'),
         ]);
 
         foreach ($candidates as $path) {

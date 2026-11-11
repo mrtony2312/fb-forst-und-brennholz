@@ -9,7 +9,7 @@
         <div class="container">
             @if ($items->isEmpty())
                 <div class="text-center py-5">
-                    <p class="mb-3">Votre liste de favoris est vide.</p>
+                    <p class="mb-3">Ihre Merkliste ist leer.</p>
                     <a href="{{ route('shop.index') }}" class="tf-btn btn-fill animate-btn"><span>Zum Shop</span></a>
                 </div>
             @else

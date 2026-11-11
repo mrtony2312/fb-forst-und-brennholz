@@ -13,7 +13,7 @@ class CheckoutPaymentVatTest extends TestCase
 
     public function test_vat_is_extracted_from_gross_price(): void
     {
-        $this->assertSame(8.10, vat_included(108.10));
+        $this->assertSame(19.0, vat_included(119.0));
     }
 
     public function test_only_enabled_payment_methods_are_offered(): void
@@ -24,34 +24,39 @@ class CheckoutPaymentVatTest extends TestCase
     public function test_pages_show_vat_and_payment_methods(): void
     {
         foreach (['/agb', '/faq', '/warenkorb'] as $url) {
-            $this->get($url)->assertOk()->assertSee('8.1 %', false);
+            $this->get($url)->assertOk()->assertSee('19 %', false);
         }
-        $this->get('/faq')->assertSee('QR-Rechnung', false)->assertDontSee('TWINT', false);
+        $this->get('/faq')->assertSee('Rechnung', false)->assertDontSee('TWINT', false);
     }
 
     public function test_legal_pages_expose_business_identity(): void
     {
         $this->get('/impressum')
             ->assertOk()
-            ->assertSee('Heri Brennholz GmbH', false)
-            ->assertSee('CHE-228.719.493', false)
-            ->assertSee('Fiderholzstrasse 7', false)
-            ->assertSee('Biberist', false);
+            ->assertSee('F & B Forst und Brennholz GmbH', false)
+            ->assertSee('HRB 40744', false)
+            ->assertSee('Dekan-Schnitter-Straße 4', false)
+            ->assertSee('Hohenfels', false)
+            ->assertSee('Thomas Josef Freimann', false)
+            ->assertSee('Tobias Heinrich Boßle', false)
+            ->assertSee('Brennholzhandel', false)
+            ->assertSee('Haarziegelhütte 10a', false);
 
         $this->get('/versand')
             ->assertOk()
-            ->assertSee('Schweiz', false)
+            ->assertSee('Deutschland', false)
             ->assertSee('kostenlos', false);
 
         $this->get('/rueckgabe')
             ->assertOk()
             ->assertSee('14', false)
-            ->assertSee('kein gesetzliches Widerrufsrecht', false);
+            ->assertSee('Widerrufsrecht', false);
 
         $this->get('/kontakt')
             ->assertOk()
-            ->assertSee('kontakt@heribrennholzgmbh.com', false)
-            ->assertSee('+41 78 609 95 16', false);
+            ->assertSee('info@fbforstundbrennholzgmbh.com', false)
+            ->assertSee('+49 1525 5641834', false)
+            ->assertSee('Haarziegelhütte 10a', false);
     }
 
     public function test_checkout_stores_payment_method_and_rejects_inactive_ones(): void
@@ -60,12 +65,12 @@ class CheckoutPaymentVatTest extends TestCase
         $data = [
             'first_name' => 'Anna',
             'last_name' => 'Muster',
-            'email' => 'a@example.ch',
-            'phone' => '+41 79 123 45 67',
-            'address' => 'Bahnhofstrasse 1',
-            'city' => 'Bern',
-            'postcode' => '3000',
-            'country' => 'CH',
+            'email' => 'a@example.de',
+            'phone' => '+49 30 1234567',
+            'address' => 'Hauptstrasse 1',
+            'city' => 'Berlin',
+            'postcode' => '10115',
+            'country' => 'DE',
         ];
 
         $this->withSession(['cart' => [$product->id => 1]])
@@ -79,8 +84,8 @@ class CheckoutPaymentVatTest extends TestCase
         $order = Order::first();
         $this->assertNotNull($order);
         $this->assertSame('vorkasse', $order->payment_method);
-        $this->assertSame('CH', $order->country);
+        $this->assertSame('DE', $order->country);
         $this->assertSame(0.0, (float) $order->shipping);
-        $this->assertSame('CHF', $order->currency);
+        $this->assertSame('EUR', $order->currency);
     }
 }

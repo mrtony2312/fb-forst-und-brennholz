@@ -23,7 +23,7 @@ class GoogleProductMapper
 
         $primary = $product->primary_image;
         $images = $product->images;
-        $currency = 'CHF';
+        $currency = shop_currency();
         $price = (float) $product->price;
         $regular = (float) ($product->regular_price ?: $product->price);
 
@@ -55,13 +55,13 @@ class GoogleProductMapper
             title: TitleBuilder::build((string) $product->name, $brand),
             description: DescriptionSanitizer::plain(
                 $product->description ?: $product->short_description,
-                trim($brand.' '.(string) $product->name.' – Brennholz und Holzpellets von Heri Brennholz GmbH, Lieferung in der Schweiz.')
+                trim($brand.' '.(string) $product->name.' – Brennholz und Holzpellets von F & B Forst und Brennholz GmbH, Lieferung nach Deutschland.')
             ),
             link: gmc_absolute_url(route('product.show', $product->slug)),
             imageLink: gmc_absolute_url($primary->url),
             additionalImageLinks: $additional,
             availability: $product->in_stock ? Availability::InStock->value : Availability::OutOfStock->value,
-            condition: (string) config('feed.condition', 'new'),
+            condition: (string) config('feed.condition', config('feed.default_condition', 'new')),
             price: PriceFormatter::format($onSale ? $regular : $price, $currency),
             salePrice: $onSale ? PriceFormatter::format($price, $currency) : null,
             brand: $brand,
@@ -73,14 +73,14 @@ class GoogleProductMapper
             googleProductCategory: $this->googleCategory($product),
             productType: $product->categories->pluck('name')->filter()->implode(' > '),
             shippingWeight: $shippingWeight,
-            unitPricingMeasure: $unit['measure'],
-            unitPricingBaseMeasure: $unit['base'],
-            shippingLabel: $shippingLabel,
             contentLanguage: 'de',
-            targetCountry: 'CH',
+            targetCountry: (string) config('merchant.target_country', 'DE'),
             priceAmount: $price,
             currency: $currency,
             inStock: (bool) $product->in_stock,
+            unitPricingMeasure: $unit['measure'],
+            unitPricingBaseMeasure: $unit['base'],
+            shippingLabel: $shippingLabel,
         );
     }
 
@@ -128,6 +128,11 @@ class GoogleProductMapper
             return false;
         }
 
+        // Only submit buyable stock — avoids limited approvals from unavailable offers.
+        if (! $product->in_stock) {
+            return false;
+        }
+
         if (! $product->primary_image) {
             return false;
         }
@@ -157,9 +162,9 @@ class GoogleProductMapper
             }
         }
 
-        $fallback = trim((string) config('feed.brand', config('merchant.default_brand', 'Heri Brennholz')));
+        $fallback = trim((string) config('feed.brand', config('merchant.default_brand', 'F & B Forst und Brennholz')));
 
-        return $fallback !== '' ? $fallback : 'Heri Brennholz';
+        return $fallback !== '' ? $fallback : 'F & B Forst und Brennholz';
     }
 
     private function googleCategory(Product $product): string

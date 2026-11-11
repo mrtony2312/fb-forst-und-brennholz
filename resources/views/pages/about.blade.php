@@ -1,40 +1,46 @@
 @extends('layouts.omniva')
 
 @section('title', 'Über uns')
-@section('meta_description', 'Heri Brennholz GmbH in Biberist: Schweizer Brennholz, Pellets und Briketts – transparent, lokal, mit kostenloser Lieferung in der ganzen Schweiz.')
+@section('meta_description', 'F & B Forst und Brennholz GmbH in Hohenfels: Brennholz, Pellets und Briketts – transparent, mit kostenloser Lieferung in Deutschland.')
 
 @php
     $img = fn ($n, $fallback = 'assets/images/item/item-bg.jpg') =>
-        is_file(public_path("media/site/{$n}.jpg")) ? asset("media/site/{$n}.jpg") : asset($fallback);
+        is_file(public_path("media/site/{$n}.jpg")) ? "/media/site/{$n}.jpg" : '/'.ltrim($fallback, '/');
     $nap = company_nap();
 @endphp
 
 @section('content')
-    @include('partials.page-title', ['pageTitle' => 'Über Heri Brennholz', 'titleImageSlug' => 'about-1'])
+    @include('partials.page-title', ['pageTitle' => 'Über F & B Forst und Brennholz', 'titleImageSlug' => 'about-1'])
     <section class="flat-spacing-9">
         <div class="container">
             <div class="row align-items-center g-4 mb-5">
                 <div class="col-lg-6">
-                    <img src="{{ $img('about-1') }}" alt="Brennholzlager Heri Brennholz GmbH" class="rounded-16 w-100" style="max-height:420px;object-fit:cover;">
+                    <img src="{{ $img('about-1') }}" alt="Brennholzlager {{ $nap['legal_name'] }}" class="rounded-16 w-100" style="max-height:420px;object-fit:cover;">
                 </div>
                 <div class="col-lg-6">
-                    <h4 class="mb-3">Schweizer Qualität – direkt vom Anbieter</h4>
+                    <h4 class="mb-3">Qualität direkt vom Anbieter</h4>
                     <p>
                         Die <strong>{{ $nap['legal_name'] }}</strong> mit Sitz in
-                        {{ $nap['locality'] ?? $nap['city'] }} (Kanton {{ $nap['region'] ?? 'Solothurn' }})
+                        {{ $nap['locality'] ?? $nap['city'] }} ({{ $nap['region'] ?? 'Bayern' }}, {{ $nap['country_name'] ?? 'Deutschland' }})
                         vertreibt Brennholz, Kaminholz, Holzpellets, Holzbriketts und passendes Zubehör
                         über unseren Online-Shop.
                     </p>
                     <p>
-                        Wir sind ein eingetragenes Schweizer Unternehmen
-                        (UID {{ $nap['vat_id'] ?? 'CHE-228.719.493' }},
-                        HR {{ $nap['hr_number'] ?? 'CH-241.4.020.905-9' }}).
-                        Geschäftsführer: {{ $nap['managing_director'] ?? 'Markus Heri' }}.
+                        Wir sind eine eingetragene deutsche GmbH
+                        ({{ $nap['register_court'] ?? 'Amtsgericht Nürnberg' }},
+                        {{ $nap['hr_number'] ?? 'HRB 40744' }}).
+                        @php $directors = $nap['managing_directors'] ?? []; @endphp
+                        @if ($directors !== [])
+                            Geschäftsführer:
+                            {{ collect($directors)->pluck('name')->filter()->join(', ') }}.
+                        @elseif (! empty($nap['managing_director']))
+                            Geschäftsführer: {{ $nap['managing_director'] }}.
+                        @endif
                     </p>
                     <p>
                         Unser Modell ist klar und transparent: Sie bestellen online, wir bestätigen per E-Mail
-                        und liefern <strong>kostenlos in der ganzen Schweiz</strong>
-                        (in der Regel {{ (int) config('merchant.shipping.min_days', 1) }}–{{ (int) config('merchant.shipping.max_days', 2) }} Werktage).
+                        und liefern <strong>kostenlos nach Deutschland</strong>
+                        (in der Regel {{ (int) config('merchant.shipping.min_days', 2) }}–{{ (int) config('merchant.shipping.max_days', 5) }} Werktage).
                         Zahlung derzeit über {{ payment_methods_text() }}.
                     </p>
                 </div>

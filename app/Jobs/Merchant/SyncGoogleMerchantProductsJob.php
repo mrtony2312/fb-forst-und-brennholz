@@ -19,7 +19,7 @@ class SyncGoogleMerchantProductsJob implements ShouldQueue
 
         $result = $sync->sync(writeFeed: true);
 
-        Log::info('Merchant API sync finished (CH)', [
+        Log::info('Merchant API sync finished (DE)', [
             'ok' => $result['ok'],
             'skipped' => $result['skipped'],
             'failed' => $result['failed'],

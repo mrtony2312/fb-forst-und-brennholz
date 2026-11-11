@@ -1,7 +1,7 @@
 @extends('layouts.omniva')
 
-@section('title', 'Rückgabe & Erstattung')
-@section('meta_description', 'Freiwilliges 14-Tage-Rückgaberecht der Heri Brennholz GmbH. Transparente Rückgabe- und Erstattungsbedingungen.')
+@section('title', 'Rückgabe & Widerruf')
+@section('meta_description', '14-tägiges Widerrufsrecht und Rückgabebedingungen der F & B Forst und Brennholz GmbH für Bestellungen nach Deutschland.')
 
 @section('content')
     @php
@@ -9,18 +9,18 @@
         $ret = config('merchant.returns');
         $days = (int) ($ret['days'] ?? 14);
         $refundDays = (int) ($ret['refund_days'] ?? 14);
-        $returnCost = (float) ($ret['return_shipping_cost'] ?? 15);
+        $returnCost = (float) ($ret['return_shipping_cost'] ?? 19.90);
         $customerPays = (bool) ($ret['customer_pays_return_shipping'] ?? true);
     @endphp
-    @include('partials.page-title', ['pageTitle' => 'Rückgabe & Erstattung', 'titleImageSlug' => 'banner-wide-1'])
+    @include('partials.page-title', ['pageTitle' => 'Rückgabe & Widerruf', 'titleImageSlug' => 'banner-wide-1'])
     <section class="flat-spacing-9">
         <div class="container" style="max-width:820px;">
-            <p class="text-caption mb-4">Nach Schweizer Recht besteht für online abgeschlossene Kaufverträge <strong>kein gesetzliches Widerrufsrecht</strong>. Wir räumen unseren Kundinnen und Kunden dennoch freiwillig folgendes Rückgaberecht ein.</p>
+            <p class="text-caption mb-4">Für Verbraucherinnen und Verbraucher gilt bei Fernabsatzverträgen das gesetzliche <strong>14-tägige Widerrufsrecht</strong> (EU/DE). Nachfolgend die wichtigsten Punkte unserer Rückgaberichtlinie.</p>
 
-            <h5>Freiwilliges Rückgaberecht</h5>
+            <h5>Widerrufsrecht</h5>
             <p>
-                Sie können Ware innerhalb von <strong>{{ $days }} Tagen</strong> nach Erhalt ohne Angabe von Gründen zurückgeben,
-                sofern sie unbenutzt, unbeschädigt und in wiederverkaufsfähigem Zustand ist (Originalverpackung soweit zumutbar).
+                Sie können die Bestellung innerhalb von <strong>{{ $days }} Tagen</strong> nach Erhalt der Ware ohne Angabe von Gründen widerrufen,
+                sofern die Ware unbenutzt, unbeschädigt und in wiederverkaufsfähigem Zustand ist (Originalverpackung soweit zumutbar).
             </p>
 
             <h5>Ausnahmen</h5>
@@ -38,14 +38,14 @@
                     <a href="tel:{{ $nap['telephone'] }}">{{ $nap['telephone_display'] }}</a>
                     und nennen Sie Ihre Bestellnummer.</li>
                 <li>Sie erhalten von uns die Rücksendeadresse und eine Bestätigung.</li>
-                <li>Senden Sie die Ware vollständig und gut verpackt an die mitgeteilte Adresse in der Schweiz.</li>
+                <li>Senden Sie die Ware vollständig und gut verpackt an die mitgeteilte Adresse in Deutschland.</li>
             </ol>
 
             <h5>Rücksendekosten</h5>
             <p>
                 @if ($customerPays)
                     Die Kosten der Rücksendung trägt die Kundin bzw. der Kunde
-                    (Richtwert ca. <strong>{{ swiss_money($returnCost) }}</strong>, abhängig von Gewicht und Spedition).
+                    (Richtwert ca. <strong>{{ shop_money($returnCost) }}</strong>, abhängig von Gewicht und Spedition).
                     Ausgenommen sind Fälle, in denen wir eine falsche oder mangelhafte Ware geliefert haben – dann übernehmen wir die Rücksendekosten.
                 @else
                     Wir übernehmen die Kosten der Rücksendung.
@@ -61,7 +61,7 @@
 
             <h5>Mängel / Garantie</h5>
             <p>
-                Bei Mängeln gelten die gesetzlichen Gewährleistungsrechte der Schweiz.
+                Bei Mängeln gelten die gesetzlichen Gewährleistungsrechte.
                 Bitte melden Sie offensichtliche Transportschäden umgehend nach Erhalt mit Fotos an
                 <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a>.
             </p>

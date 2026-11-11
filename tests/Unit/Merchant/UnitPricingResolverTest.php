@@ -34,7 +34,7 @@ class UnitPricingResolverTest extends TestCase
             'weight' => null,
             'price' => 470.00,
             'price_per_unit' => 0.470,
-            'price_per_unit_label' => 'CHF/kg',
+            'price_per_unit_label' => 'EUR/kg',
         ]);
         $product->setRelation('categories', collect());
 

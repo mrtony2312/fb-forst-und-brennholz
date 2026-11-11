@@ -8,7 +8,7 @@ use App\Models\Product;
 use XMLWriter;
 
 /**
- * Google Merchant Center RSS 2.0 product feed (CH / de / CHF).
+ * Google Merchant Center RSS 2.0 product feed (DE / de / EUR).
  *
  * Only emits recognized product-data-spec attribute names under xmlns:g.
  * Shipping is limited to country/service/price; handling times are top-level.
@@ -19,13 +19,11 @@ use XMLWriter;
  */
 class GoogleFeedGenerator
 {
-    public function __construct(private readonly GoogleProductMapper $mapper)
-    {
-    }
+    public function __construct(private readonly GoogleProductMapper $mapper) {}
 
     public function toXml(): string
     {
-        $w = new XMLWriter();
+        $w = new XMLWriter;
         $w->openMemory();
         $w->setIndent(true);
         $w->startDocument('1.0', 'UTF-8');
@@ -122,15 +120,14 @@ class GoogleFeedGenerator
         $this->g($w, 'min_handling_time', (string) $minHandling);
         $this->g($w, 'max_handling_time', (string) $maxHandling);
 
-        // Shipping: country / service / price only. Free CH must be 0.00 CHF.
-        // Transit times: also set in Merchant Center shipping settings for CH.
+        // Shipping: country / service / price only. Free DE must be 0.00 EUR.
         $shipPriceAmount = (float) config(
             'merchant.shipping.price',
             config('feed.shipping_price', config('shop.shipping.price', 0))
         );
         $shipPrice = PriceFormatter::format($shipPriceAmount, $dto->currency);
         $w->startElement('g:shipping');
-        $this->g($w, 'country', (string) config('merchant.shipping.country', 'CH'));
+        $this->g($w, 'country', (string) config('merchant.shipping.country', 'DE'));
         $this->g($w, 'service', $this->shippingService());
         $this->g($w, 'price', $shipPrice);
         $w->endElement();

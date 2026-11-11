@@ -1,30 +1,38 @@
 @extends('layouts.omniva')
 
 @section('title', 'Kontakt')
-@section('meta_description', 'Kontaktieren Sie Heri Brennholz GmbH in Biberist: Telefon, E-Mail und Kontaktformular. Mo–Fr 08:00–18:00.')
+@section('meta_description', 'Kontaktieren Sie F & B Forst und Brennholz GmbH in Hohenfels: Telefon, E-Mail und Kontaktformular. Mo–Fr 08:00–18:00.')
 
 @section('content')
     @php $nap = company_nap(); @endphp
     @include('partials.page-title', ['pageTitle' => 'Kontakt aufnehmen', 'titleImageSlug' => 'contact-1'])
     <section class="flat-spacing-9">
         <div class="container">
-            @php $c = is_file(public_path('media/site/contact-1.jpg')) ? asset('media/site/contact-1.jpg') : null; @endphp
+            @php $c = is_file(public_path('media/site/contact-1.jpg')) ? '/media/site/contact-1.jpg' : null; @endphp
             @if ($c)
-                <img src="{{ $c }}" alt="Kontakt Heri Brennholz" class="rounded-16 w-100 mb-4" style="max-height:320px;object-fit:cover;">
+                <img src="{{ $c }}" alt="Kontakt {{ config('app.name') }}" class="rounded-16 w-100 mb-4" style="max-height:320px;object-fit:cover;">
             @endif
             <div class="row">
                 <div class="col-lg-5 mb-4">
                     <h6>Unternehmensdaten</h6>
                     <p class="text-caption">
                         <strong>{{ $nap['legal_name'] }}</strong><br>
-                        {{ $nap['street'] }}<br>
-                        {{ $nap['postal_code'] }} {{ $nap['locality'] ?? $nap['city'] }}<br>
-                        {{ $nap['country_name'] }}
+                        <strong>Sitz:</strong> {{ $nap['street'] }}, {{ $nap['postal_code'] }} {{ $nap['locality'] ?? $nap['city'] }}, {{ $nap['country_name'] }}
+                        @if (! empty($nap['operating_address']['street']))
+                            <br><strong>{{ $nap['operating_address']['label'] ?? 'Lager' }}:</strong>
+                            {{ $nap['operating_address']['street'] }},
+                            {{ $nap['operating_address']['postal_code'] ?? '' }}
+                            {{ $nap['operating_address']['locality'] ?? '' }},
+                            {{ $nap['operating_address']['country_name'] ?? $nap['country_name'] }}
+                        @endif
                     </p>
                     <p class="text-caption">
                         Telefon: <a href="tel:{{ $nap['telephone'] }}">{{ $nap['telephone_display'] }}</a><br>
                         E-Mail: <a href="mailto:{{ $nap['email'] }}">{{ $nap['email'] }}</a><br>
-                        UID: {{ $nap['vat_id'] ?? 'CHE-228.719.493' }}
+                        {{ $nap['hr_number'] ?? 'HRB 40744' }} · {{ $nap['register_court'] ?? 'Amtsgericht Nürnberg' }}
+                        @if (! empty($nap['vat_id']))
+                            <br>USt-IdNr.: {{ $nap['vat_id'] }}
+                        @endif
                     </p>
                     <p class="text-caption">
                         <strong>Erreichbarkeit:</strong><br>

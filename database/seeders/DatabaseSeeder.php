@@ -17,6 +17,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        User::query()->updateOrCreate(
+            ['email' => env('ADMIN_EMAIL', 'admin@fbforstundbrennholzgmbh.com')],
+            [
+                'name' => env('ADMIN_NAME', 'Shop Admin'),
+                'password' => env('ADMIN_PASSWORD', 'ChangeMeAdmin123!'),
+            ]
+        );
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',

@@ -44,7 +44,10 @@
                     {{ $order->postcode }} {{ $order->city }},
                     {{ $order->country === 'DE' ? 'Deutschland' : $order->country }}
                 </p>
-                <p class="text-caption mb-0">
+                @if (in_array($order->payment_method, ['vorkasse', 'rechnung'], true))
+                    @include('partials.payment-account', ['reference' => $order->reference])
+                @endif
+                <p class="text-caption mb-0 mt-3">
                     Lieferzeit: {{ shipping_summary() }}.
                     Rückgabe: <a href="{{ route('pages.rueckgabe') }}">Richtlinie</a>.
                 </p>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\PaymentAccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FeedController;
@@ -64,3 +66,15 @@ Route::redirect('/feeds/google-merchant-ch.xml/download', '/feeds/google-merchan
 Route::redirect('/feeds/google-merchant-ch.tsv', '/feeds/google-merchant-de.tsv', 301);
 Route::redirect('/feed/google-merchant.xml', '/feeds/google-merchant-de.xml', 301);
 Route::redirect('/feed/google-merchant.xml/download', '/feeds/google-merchant-de.xml/download', 301);
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/', fn () => redirect()->route('admin.payment.edit'))->name('home');
+        Route::get('/zahlung', [PaymentAccountController::class, 'edit'])->name('payment.edit');
+        Route::put('/zahlung', [PaymentAccountController::class, 'update'])->name('payment.update');
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+    });
+});

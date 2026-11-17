@@ -64,4 +64,17 @@ return [
         'require_phone' => true,
         'company_visible' => true,
     ],
+
+    /*
+     | Bank / payment account shown on confirmation + customer email.
+     | Editable in admin (/admin/zahlung). Defaults can be overridden in DB.
+     */
+    'payment_account' => [
+        'beneficiary' => env('SHOP_PAY_BENEFICIARY', 'F & B Forst und Brennholz GmbH'),
+        'bank_name' => env('SHOP_PAY_BANK_NAME', ''),
+        'iban' => env('SHOP_PAY_IBAN', ''),
+        'bic' => env('SHOP_PAY_BIC', ''),
+        'address' => env('SHOP_PAY_ADDRESS', 'Bahnhofstrasse 2, 5600 Lenzburg AG'),
+        'reference_hint' => env('SHOP_PAY_REFERENCE_HINT', 'Bitte geben Sie Ihre Bestellnummer als Verwendungszweck an.'),
+    ],
 ];

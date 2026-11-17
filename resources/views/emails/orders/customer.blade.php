@@ -42,6 +42,24 @@
   <p style="margin:20px 0 0;font-size:14px;"><strong>Ihre Anmerkung:</strong><br>{{ $order->notes }}</p>
 @endif
 
+@if (in_array($order->payment_method, ['vorkasse', 'rechnung'], true))
+  @php $pay = payment_account(); @endphp
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf7f2;border:1px solid #ece5da;border-radius:10px;margin-top:24px;">
+    <tr>
+      <td style="padding:16px 20px;font-size:14px;line-height:1.7;">
+        <strong style="display:block;margin-bottom:6px;">Zahlungsinformationen</strong>
+        @if (! empty($pay['beneficiary']))Kontoinhaber: {{ $pay['beneficiary'] }}<br>@endif
+        @if (! empty($pay['bank_name']))Bank: {{ $pay['bank_name'] }}<br>@endif
+        @if (! empty($pay['iban']))IBAN: {{ $pay['iban'] }}<br>@endif
+        @if (! empty($pay['bic']))BIC: {{ $pay['bic'] }}<br>@endif
+        @if (! empty($pay['address']))Adresse: {{ $pay['address'] }}<br>@endif
+        Verwendungszweck: {{ $order->reference }}<br>
+        @if (! empty($pay['reference_hint']))<span style="color:#6b6259;">{{ $pay['reference_hint'] }}</span>@endif
+      </td>
+    </tr>
+  </table>
+@endif
+
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;">
   <tr>
     <td align="center">

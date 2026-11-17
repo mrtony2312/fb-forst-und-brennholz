@@ -417,18 +417,36 @@
                         <div class="ft-infor">
                             <a href="/" class="logo-site">
                                 <img loading="lazy" width="320" height="160" src="/assets/images/logo/logo-header.png?v=4"
-                                    alt="F & B Forst und Brennholz GmbH">
+                                    alt="{{ $co['legal_name'] ?? 'F & B Forst und Brennholz GmbH' }}">
                             </a>
+                            <p class="text-caption fw-semibold mb-2">
+                                {{ $co['legal_name'] ?? 'F & B Forst und Brennholz GmbH' }}
+                            </p>
                             <ul class="list-infor-contact tf-list vertical gap-15">
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
                                         <i class="icon icon-DotLocation"></i>
                                     </span>
-                                    <a href="https://www.google.com/maps?q={{ urlencode(($co['street'] ?? 'Dekan-Schnitter-Straße 4').', '.($co['postal_code'] ?? '92366').' '.($co['locality'] ?? $co['city'] ?? 'Hohenfels').', Deutschland') }}"
-                                        class="text-caption fw-medium link-underline link-black"
-                                        target="_blank" rel="noopener">
-                                        {{ $co['street'] ?? 'Dekan-Schnitter-Straße 4' }}, {{ $co['postal_code'] ?? '92366' }} {{ $co['locality'] ?? $co['city'] ?? 'Hohenfels' }}, {{ $co['country_name'] ?? 'Deutschland' }}
-                                    </a>
+                                    <div class="text-caption fw-medium">
+                                        <div class="mb-1">
+                                            <strong>Sitz:</strong>
+                                            <a href="https://www.google.com/maps?q={{ urlencode(($co['street'] ?? 'Dekan-Schnitter-Straße 4').', '.($co['postal_code'] ?? '92366').' '.($co['locality'] ?? $co['city'] ?? 'Hohenfels').', Deutschland') }}"
+                                                class="link-underline link-black"
+                                                target="_blank" rel="noopener">
+                                                {{ $co['address_line'] ?? (($co['street'] ?? 'Dekan-Schnitter-Straße 4').', '.($co['postal_code'] ?? '92366').' '.($co['locality'] ?? $co['city'] ?? 'Hohenfels').', Deutschland') }}
+                                            </a>
+                                        </div>
+                                        @if (! empty($co['operating_address']['address_line']))
+                                            <div>
+                                                <strong>{{ $co['operating_address']['label'] ?? 'Betriebsstätte / Lager' }}:</strong>
+                                                <a href="https://www.google.com/maps?q={{ urlencode($co['operating_address']['address_line']) }}"
+                                                    class="link-underline link-black"
+                                                    target="_blank" rel="noopener">
+                                                    {{ $co['operating_address']['address_line'] }}
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </li>
                                 <li class="infor-contact_item">
                                     <span class="ic-w">
@@ -457,7 +475,15 @@
                                     </span>
                                 </li>
                             </ul>
-                            <a href="{{ route('pages.contact') }}" class="tf-btn-line gap-6">
+                            <div class="text-caption cl-text-main mt-3" style="line-height:1.55;">
+                                <div>{{ $co['register_court'] ?? 'Amtsgericht Nürnberg' }}, {{ $co['hr_number'] ?? 'HRB 40744' }}</div>
+                                <div>Geschäftsführer: {{ $co['managing_director'] ?? 'Thomas Josef Freimann, Tobias Heinrich Boßle' }}</div>
+                                @if (! empty($co['vat_id']))
+                                    <div>USt-IdNr.: {{ $co['vat_id'] }}</div>
+                                @endif
+                                <div>Stammkapital: {{ $co['share_capital'] ?? '25.100 €' }}</div>
+                            </div>
+                            <a href="{{ route('pages.contact') }}" class="tf-btn-line gap-6 mt-3">
                                 <span class="text-caption fw-medium">
                                     Kontakt aufnehmen
                                 </span>
@@ -569,10 +595,14 @@
                     <div class="footer-bottom_wrap">
                         <span class="br-line fake-class top-0"></span>
                         <div class="text-nocopy text-caption cl-text-main">
-                            © {{ date('Y') }} F &amp; B Forst und Brennholz GmbH. Alle Rechte vorbehalten.
+                            © {{ date('Y') }} {{ $co['legal_name'] ?? 'F & B Forst und Brennholz GmbH' }} ·
+                            {{ $co['register_court'] ?? 'Amtsgericht Nürnberg' }} {{ $co['hr_number'] ?? 'HRB 40744' }} ·
+                            {{ $co['address_line'] ?? 'Dekan-Schnitter-Straße 4, 92366 Hohenfels, Deutschland' }}
                         </div>
                         <div class="text-caption cl-text-main">
-                            Preise in {{ shop_currency() }} inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MwSt · Zahlungsarten: {{ payment_methods_text() }}
+                            Preise in {{ shop_currency() }} inkl. {{ rtrim(rtrim(number_format(config('shop.vat_rate'), 1), '0'), '.') }} % MwSt ·
+                            Zahlungsarten: {{ payment_methods_text() }} ·
+                            {{ shipping_summary() }}
                         </div>
                     </div>
                 </div>

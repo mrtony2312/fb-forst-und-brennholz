@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Product;
+use App\Models\ShopSetting;
 
 if (! function_exists('shop_currency')) {
     function shop_currency(): string
@@ -50,6 +51,42 @@ if (! function_exists('payment_methods_text')) {
     function payment_methods_text(): string
     {
         return implode(', ', payment_methods());
+    }
+}
+
+if (! function_exists('payment_account')) {
+    /**
+     * Bank account shown to customers for Vorkasse / Rechnung.
+     *
+     * @return array{
+     *     beneficiary: string,
+     *     bank_name: string,
+     *     iban: string,
+     *     bic: string,
+     *     address: string,
+     *     reference_hint: string
+     * }
+     */
+    function payment_account(): array
+    {
+        $defaults = [
+            'beneficiary' => (string) config('shop.payment_account.beneficiary', 'F & B Forst und Brennholz GmbH'),
+            'bank_name' => (string) config('shop.payment_account.bank_name', ''),
+            'iban' => (string) config('shop.payment_account.iban', ''),
+            'bic' => (string) config('shop.payment_account.bic', ''),
+            'address' => (string) config('shop.payment_account.address', 'Bahnhofstrasse 2, 5600 Lenzburg AG'),
+            'reference_hint' => (string) config('shop.payment_account.reference_hint', 'Bitte geben Sie Ihre Bestellnummer als Verwendungszweck an.'),
+        ];
+
+        if (! class_exists(ShopSetting::class)) {
+            return $defaults;
+        }
+
+        try {
+            return ShopSetting::getGroup('payment_account', $defaults);
+        } catch (Throwable) {
+            return $defaults;
+        }
     }
 }
 

@@ -20,7 +20,7 @@
             <p>
                 Diese Allgemeinen Geschäftsbedingungen (AGB) regeln den Verkauf von Holzbrennstoffen
                 (Brennholz, Kaminholz, Holzpellets, Holzbriketts) und Zubehör über den Online-Shop
-                <strong>{{ parse_url($nap['website'] ?? url('/'), PHP_URL_HOST) ?: 'heribrennholzgmbh.com' }}</strong>
+                <strong>{{ parse_url($nap['website'] ?? url('/'), PHP_URL_HOST) ?: 'brennholz-fb.de' }}</strong>
                 der <strong>{{ $nap['legal_name'] }}</strong>,
                 {{ $nap['address_line'] ?? ($nap['street'].', '.$nap['postal_code'].' '.($nap['locality'] ?? $nap['city']).', '.$nap['country_name']) }}
                 ({{ $nap['register_court'] ?? 'Amtsgericht Nürnberg' }}, {{ $nap['hr_number'] ?? 'HRB 40744' }}@if (! empty($nap['vat_id'])), USt-IdNr. {{ $nap['vat_id'] }}@endif).

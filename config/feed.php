@@ -9,7 +9,7 @@ return [
 
     'known_brands' => [
         'Invicta', 'La Nordica', 'FreePoint', 'Sannover', 'Pellini',
-        'Edilkamin', 'Palazzetti', 'Scandic', 'Heri Brennholz',
+        'Edilkamin', 'Palazzetti', 'Scandic',
         'F & B Forst und Brennholz',
     ],
 

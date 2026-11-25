@@ -32,4 +32,4 @@ Allow: /media
 Allow: /storage
 Allow: /assets
 
-Sitemap: https://heribrennholzgmbh.com/sitemap.xml
+Sitemap: https://brennholz-fb.de/sitemap.xml

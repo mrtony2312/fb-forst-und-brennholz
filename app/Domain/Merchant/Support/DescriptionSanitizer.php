@@ -89,7 +89,7 @@ class DescriptionSanitizer
             $text
         ) ?? $text;
 
-        return $text;
+        return GermanCopyNormalizer::normalize($text);
     }
 
     private static function shippingSuffix(): string

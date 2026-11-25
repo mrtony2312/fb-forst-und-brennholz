@@ -26,7 +26,7 @@
                 ({{ $nap['register_court'] ?? 'Amtsgericht Nürnberg' }}, {{ $nap['hr_number'] ?? 'HRB 40744' }}@if (! empty($nap['vat_id'])), USt-IdNr. {{ $nap['vat_id'] }}@endif).
             </p>
             <p>
-                Vertragspartner ist ausschliesslich die {{ $nap['legal_name'] }}.
+                Vertragspartner ist ausschließlich die {{ $nap['legal_name'] }}.
                 Der Shop richtet sich an Endverbraucher und Gewerbekunden in <strong>Deutschland</strong>.
             </p>
 
@@ -52,7 +52,7 @@
 
             <h5>4. Lieferung</h5>
             <p>
-                Lieferung ausschliesslich nach <strong>Deutschland</strong>.
+                Lieferung ausschließlich nach <strong>Deutschland</strong>.
                 Details siehe <a href="{{ route('pages.versand') }}">Versandseite</a>.
             </p>
             <ul>

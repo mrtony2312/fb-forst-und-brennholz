@@ -46,7 +46,7 @@
 
             <h5>5. Speicherdauer</h5>
             <p>
-                Bestell- und Buchhaltungsdaten werden gemäss gesetzlichen Fristen (in der Regel 10 Jahre) aufbewahrt.
+                Bestell- und Buchhaltungsdaten werden gemäß gesetzlichen Fristen (in der Regel 10 Jahre) aufbewahrt.
                 Anfragen und Logs werden gelöscht, sobald der Zweck entfällt und keine Aufbewahrungspflicht entgegensteht.
             </p>
 

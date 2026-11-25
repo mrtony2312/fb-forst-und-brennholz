@@ -17,7 +17,7 @@
             ],
             [
                 'Ist die Lieferung wirklich kostenlos?',
-                'Ja. Für alle Bestellungen mit Lieferadresse in Deutschland betragen die Versandkosten '.shop_money(0).' – ohne Mindestbestellwert. Lieferungen ausserhalb Deutschlands bieten wir nicht an.',
+                'Ja. Für alle Bestellungen mit Lieferadresse in Deutschland betragen die Versandkosten '.shop_money(0).' – ohne Mindestbestellwert. Lieferungen außerhalb Deutschlands bieten wir nicht an.',
             ],
             [
                 'Welche Zahlungsmittel akzeptieren Sie?',
@@ -41,7 +41,7 @@
             ],
             [
                 'Liefern Sie auch ins Ausland?',
-                'Nein. Verkauf und Versand erfolgen ausschliesslich nach Deutschland.',
+                'Nein. Verkauf und Versand erfolgen ausschließlich nach Deutschland.',
             ],
         ];
     @endphp

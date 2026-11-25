@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Merchant;
 
 use App\Domain\Merchant\Support\DescriptionSanitizer;
+use App\Domain\Merchant\Support\GermanCopyNormalizer;
 use App\Models\Product;
 use Illuminate\Console\Command;
 
@@ -23,10 +24,15 @@ class SanitizeProductCopyCommand extends Command
 
         Product::query()->orderBy('id')->chunkById(100, function ($products) use ($dry, &$changed) {
             foreach ($products as $product) {
+                $name = GermanCopyNormalizer::normalize((string) $product->name);
                 $description = DescriptionSanitizer::html($product->description);
                 $short = DescriptionSanitizer::html($product->short_description);
 
-                if ($description === (string) $product->description && $short === (string) $product->short_description) {
+                if (
+                    $name === (string) $product->name
+                    && $description === (string) $product->description
+                    && $short === (string) $product->short_description
+                ) {
                     continue;
                 }
 
@@ -36,6 +42,7 @@ class SanitizeProductCopyCommand extends Command
                 }
 
                 $product->forceFill([
+                    'name' => $name !== '' ? $name : $product->name,
                     'description' => $description !== '' ? $description : $product->description,
                     'short_description' => $short !== '' ? $short : $product->short_description,
                 ])->save();

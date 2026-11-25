@@ -53,6 +53,7 @@ Route::redirect('/contact', '/kontakt', 301);
 Route::redirect('/a-propos', '/ueber-uns', 301);
 Route::redirect('/livraison', '/versand', 301);
 Route::redirect('/retours', '/rueckgabe', 301);
+Route::redirect('/widerruf', '/rueckgabe', 301);
 Route::redirect('/confidentialite', '/datenschutz', 301);
 Route::redirect('/cgv', '/agb', 301);
 

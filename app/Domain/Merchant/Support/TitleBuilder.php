@@ -10,7 +10,7 @@ class TitleBuilder
     {
         $title = html_entity_decode(strip_tags($name), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $title = preg_replace('/\s+/u', ' ', $title) ?? $title;
-        $title = trim($title);
+        $title = GermanCopyNormalizer::normalize(trim($title));
 
         // Strip promotional / policy-risky tokens (Shopping ads policies / title attribute).
         $title = preg_replace('/\b(SOLDE|PROMO|SALE|AKTION|RABATT|GRATIS|FREE SHIPPING)\b/iu', '', $title) ?? $title;

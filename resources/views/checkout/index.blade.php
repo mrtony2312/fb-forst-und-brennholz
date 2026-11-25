@@ -1,7 +1,7 @@
 @extends('layouts.omniva')
 
 @section('title', 'Bestellung')
-@section('meta_description', 'Bestellung abschliessen bei F & B Forst und Brennholz GmbH – sichere Bestellung, Lieferung Deutschland, Preise inkl. MwSt.')
+@section('meta_description', 'Bestellung abschließen bei F & B Forst und Brennholz GmbH – sichere Bestellung, Lieferung Deutschland, Preise inkl. MwSt.')
 
 @section('content')
     @php
@@ -66,7 +66,7 @@
                             <input id="company" class="form-control" name="company" value="{{ old('company') }}" maxlength="120" autocomplete="organization">
                         </div>
                         <div class="col-12">
-                            <label class="form-label text-caption" for="address">Strasse und Nr. *</label>
+                            <label class="form-label text-caption" for="address">Straße und Nr. *</label>
                             <input id="address" class="form-control" name="address" value="{{ old('address') }}" required maxlength="180" autocomplete="street-address">
                         </div>
                         <div class="col-12">

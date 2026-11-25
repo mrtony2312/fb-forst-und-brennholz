@@ -8,7 +8,7 @@
     @include('partials.page-title', ['pageTitle' => 'Impressum', 'titleImageSlug' => 'banner-wide-1'])
     <section class="flat-spacing-9">
         <div class="container" style="max-width:820px;">
-            <p class="text-caption mb-4">Anbieterkennzeichnung gemäss § 5 TMG / § 18 MStV und Google-Händleranforderungen.</p>
+            <p class="text-caption mb-4">Anbieterkennzeichnung gemäß § 5 TMG / § 18 MStV und Google-Händleranforderungen.</p>
 
             <h5>Anbieterkennzeichnung</h5>
             <p>
@@ -81,7 +81,7 @@
             @endif
 
             <h5>Haftungsausschluss</h5>
-            <p>Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschliesslich deren Betreiber verantwortlich.</p>
+            <p>Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.</p>
 
             <h5>Streitbeilegung</h5>
             <p>

@@ -16,7 +16,7 @@
             <p class="text-caption mb-4">Diese Versandbedingungen gelten für alle Bestellungen im Online-Shop und stimmen mit den Angaben im Google Merchant Center überein.</p>
 
             <h5>Liefergebiet</h5>
-            <p>Wir liefern <strong>ausschliesslich nach Deutschland</strong> ({{ $ship['zone_label'] ?? 'gesamtes Deutschland' }}). Eine Lieferung in andere Länder ist derzeit nicht möglich. Lieferadressen müssen in Deutschland liegen.</p>
+            <p>Wir liefern <strong>ausschließlich nach Deutschland</strong> ({{ $ship['zone_label'] ?? 'gesamtes Deutschland' }}). Eine Lieferung in andere Länder ist derzeit nicht möglich. Lieferadressen müssen in Deutschland liegen.</p>
 
             <h5>Versandkosten</h5>
             <p>

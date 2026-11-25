@@ -27,7 +27,7 @@
             <ul>
                 <li>Angebrochene oder verbrauchte Brennstoffe (z.&nbsp;B. geöffnete Pelletsäcke, verfeuertes Holz)</li>
                 <li>Ware, die nach Kundenspezifikation angefertigt oder klar personalisiert wurde</li>
-                <li>Beschädigte oder stark verschmutzte Artikel durch unsachgemässe Handhabung</li>
+                <li>Beschädigte oder stark verschmutzte Artikel durch unsachgemäße Handhabung</li>
             </ul>
 
             <h5>Rückgabeprozess</h5>
